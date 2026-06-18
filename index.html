@@ -2,60 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Bingo Lehulum - Ethiopian Style</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Bingo Lehulum - Perfectly Centered</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --gold: #ffd700;
-            --dark-bg: #0b0b11;
-            --card-dark: #141420;
+            --dark-bg: #0b0b13;
+            --card-dark: #151522;
             --habesha-red: #ff2a2a;
-            --clean-white: #ffffff;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
+        /* ሙሉ ስክሪኑን መሃል ላይ ለማምጣት (Perfect Center Alignment) */
         body {
             background-color: var(--dark-bg);
             color: white;
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: center; /* ልክ መሃል ላይ ያደርገዋል */
             overflow-x: hidden;
             user-select: none;
             -webkit-user-select: none;
+            padding: 10px;
         }
 
-        /* ቴሌግራም ላይ ልክ በፎቶው መሃል ላይ እንዲሆን የሚያደርግ ኮንቴነር */
+        /* በቴሌግራም ስልክ ላይ ወደ ላይና ወደ ታች ሳይለጠጥ መሃል ላይ የሚቀመጥ ዋና ኮንቴነር */
         .app-wrapper {
             width: 100%;
-            max-width: 420px;
-            padding: 15px;
+            max-width: 390px; /* ለሁሉም ስልኮች ተስማሚ ስፋት */
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
+            margin: auto 0; /* መሃል ላይ መሆኑን ያረጋግጣል */
         }
 
-        /* ገጽታ 1፦ ፕሪሚየም ወርቃማ እና ጥቁር የፊት ገጽ */
+        /* ገጽታ 1፦ ፕሪሚየም የፊት ገጽ */
         .front-premium-theme {
             background: radial-gradient(circle, #1a1202 0%, #050508 100%);
         }
 
-        /* ገጽታ 2፦ የሀበሻ ቢንጎ ንፁህ ነጭ እና ጥቁር የጨዋታ ገጽ */
+        /* ገጽታ 2፦ የጨዋታ ገጽ (ነጭ እና ጥቁር ከቀይ ክብ ጋር) */
         .game-active-theme {
             background: #eef1f6 !important;
             color: #111 !important;
         }
 
-        /* የላይኛው የትር በተኖች */
+        /* የትር መቀያየሪያዎች */
         .nav-header-tabs {
             display: flex;
             background: rgba(255, 255, 255, 0.06);
@@ -71,14 +72,15 @@
 
         .tab-item {
             flex: 1;
-            padding: 11px;
+            padding: 10px;
             background: none;
             border: none;
             color: #aaa;
             font-weight: 700;
             font-size: 13px;
             cursor: pointer;
-            border-radius: 9px;
+            border-radius: 8px;
+            text-align: center;
         }
 
         .game-active-theme .tab-item { color: #555; }
@@ -86,38 +88,38 @@
         .tab-item.active {
             background: linear-gradient(135deg, #ffd700, #ffa500);
             color: #000 !important;
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
         }
 
         .app-page { display: none; width: 100%; }
-        .app-page.active { display: flex; flex-direction: column; gap: 15px; }
+        .app-page.active { display: flex; flex-direction: column; gap: 12px; }
 
         /* የተጫዋች መረጃ ማሳያ */
         .player-status-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 15px;
+            padding: 10px 14px;
             background: var(--card-dark);
-            border-radius: 15px;
+            border-radius: 14px;
             border: 1px solid rgba(255, 215, 0, 0.2);
         }
 
         .game-active-theme .player-status-bar {
             background: white;
             border: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
         .profile-holder { display: flex; align-items: center; gap: 10px; }
-        .avatar-circle { width: 36px; height: 36px; border-radius: 50%; background: var(--gold); border: 2px solid white; display: flex; align-items: center; justify-content: center; font-weight: bold; color: black; }
-        .stars-badge { background: linear-gradient(135deg, #ffd700, #ffa500); color: black; padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 12px; }
+        .avatar-circle { width: 34px; height: 34px; border-radius: 50%; background: var(--gold); border: 2px solid white; display: flex; align-items: center; justify-content: center; font-weight: bold; color: black; font-size: 14px; }
+        .stars-badge { background: linear-gradient(135deg, #ffd700, #ffa500); color: black; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; }
 
-        /* የመሃል ክብ ቢንጎ ማሽከርከሪያ (Tombola Spinner) አኒሜሽን */
+        /* የመሃል ክብ ቢንጎ ማሽከርከሪያ (Tombola) አኒሜሽን */
         .center-spin-card {
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 18px;
+            padding: 15px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             text-align: center;
             display: flex;
@@ -127,18 +129,18 @@
         }
 
         .tombola-wheel {
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            border: 6px dashed var(--gold);
-            margin: 15px 0;
+            border: 5px dashed var(--gold);
+            margin: 12px 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 42px;
+            font-size: 38px;
             background: radial-gradient(circle, #251c05 0%, #000 100%);
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
-            animation: rotateWheel 8s linear infinite;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.35);
+            animation: rotateWheel 6s linear infinite;
         }
 
         @keyframes rotateWheel {
@@ -146,14 +148,14 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ፎቶው ላይ እንዳለው የ Play 10 Stars መግቢያ */
+        /* Play 10 Stars መግቢያ ቦክስ */
         .habesha-paywall {
             background: linear-gradient(135deg, #151522 0%, #07070d 100%);
-            border-radius: 20px;
-            padding: 25px 20px;
+            border-radius: 18px;
+            padding: 20px;
             text-align: center;
             border: 2px solid var(--gold);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.25);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
         }
 
         .engine-toggle-row {
@@ -161,12 +163,12 @@
             background: rgba(0, 0, 0, 0.4);
             padding: 4px;
             border-radius: 10px;
-            margin: 15px 0;
+            margin: 12px 0;
         }
 
         .engine-btn {
             flex: 1;
-            padding: 10px;
+            padding: 9px;
             background: none;
             border: none;
             color: #666;
@@ -181,19 +183,19 @@
             color: black;
         }
 
-        /* እውነተኛው የሀበሻ ቢንጎ 1-90 ሰሌዳ አቀማመጥ (Horizontal Grid) */
+        /* 1-90 የሀበሻ ቢንጎ ሰሌዳ (Horizontal Grid) */
         .habesha-board-box {
             background: white;
-            border-radius: 18px;
-            padding: 15px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            border-radius: 16px;
+            padding: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
             display: none;
             width: 100%;
         }
 
         .grid-90-layout {
             display: grid;
-            grid-template-columns: repeat(10, 1fr); /* 10 በአግድም እኩል የተደረደሩ */
+            grid-template-columns: repeat(10, 1fr); /* 10 ቁጥሮች በአግድም በአንድ መስመር */
             gap: 4px;
             width: 100%;
         }
@@ -201,40 +203,39 @@
         .grid-90-layout div {
             background: #f1f3f5;
             color: #222;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 800;
-            height: 36px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
+            border-radius: 5px;
             border: 1px solid #cbd5e1;
             cursor: pointer;
-            transition: all 0.1s ease;
         }
 
-        /* ሲመረጥ ደማቅ ቀይ ክብ የሚሆነው ማርከር */
+        /* ሲመረጥ ደማቅ ቀይ ክብ የሚሆን ማርከር */
         .grid-90-layout div.marked {
             background: linear-gradient(135deg, #ff1a1a, #cc0000) !important;
             color: white !important;
             border-color: #ff1a1a !important;
-            border-radius: 50%; /* ክብ ያደርገዋል */
+            border-radius: 50%;
             transform: scale(0.92);
-            box-shadow: 0 2px 6px rgba(255, 26, 26, 0.5);
+            box-shadow: 0 2px 5px rgba(255, 26, 26, 0.4);
         }
 
-        /* የአዝራሮች ሪፖርት */
+        /* ዋና ቁልፎች */
         .main-action-button {
             background: linear-gradient(135deg, #ffd700, #ffa500);
             color: black;
             border: none;
-            padding: 15px 30px;
+            padding: 14px 20px;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             border-radius: 12px;
             cursor: pointer;
             width: 100%;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.35);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
         }
 
         .secondary-action-button {
@@ -254,7 +255,7 @@
             border: 1px solid #94a3b8;
         }
 
-        /* የሽልማት ገፅ */
+        /* የሪዋርድ ገፅ ሳጥን */
         .reward-card-box {
             background: var(--card-dark);
             border-radius: 15px;
@@ -265,9 +266,9 @@
         .bar-container {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 8px;
-            height: 10px;
+            height: 8px;
             width: 100%;
-            margin: 12px 0;
+            margin: 10px 0;
             overflow: hidden;
         }
 
@@ -288,23 +289,23 @@
         .history-card-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px;
+            padding: 9px;
             background: rgba(255,255,255,0.02);
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 12px;
             margin-bottom: 5px;
         }
 
         .toast-popup {
             position: fixed;
-            bottom: 40px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: #000;
             color: var(--gold);
-            padding: 10px 20px;
+            padding: 9px 18px;
             border-radius: 25px;
-            font-size: 13px;
+            font-size: 12px;
             z-index: 20000;
             display: none;
             border: 1px solid var(--gold);
@@ -330,7 +331,7 @@
                     <div style="font-size:11px; color:#777;" id="ticketCounter">Free Tickets: 0</div>
                 </div>
             </div>
-            <div class="stars-badge">⭐ <span id="starsTokenVal">120</span> Stars</div>
+            <div class="stars-badge">⭐ <span id="starsTokenVal">150</span> Stars</div>
         </div>
 
         <div id="play-page" class="app-page active">
@@ -342,7 +343,7 @@
 
             <div class="habesha-paywall" id="paywallContainer">
                 <h3 style="color:var(--gold); font-size:18px;">የሀበሻ ቢንጎ ዙር</h3>
-                <p style="font-size:12px; color:#aaa; margin-top:5px;">ለመጀመር 10 Stars ይክፈሉ ወይም የነፃ ቲኬትዎን ይጠቀሙ።</p>
+                <p style="font-size:12px; color:#aaa; margin-top:4px;">ለመጀመር 10 Stars ይክፈሉ ወይም የነፃ ቲኬትዎን ይጠቀሙ።</p>
                 
                 <div class="engine-toggle-row">
                     <button class="engine-btn active" id="modeMan" onclick="toggleEngine('manual')">Manual</button>
@@ -353,15 +354,14 @@
             </div>
 
             <div class="habesha-board-box" id="habeshaBoard">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #e2e8f0; padding-bottom:6px;">
                     <span style="font-weight:800; font-size:13px;" id="liveInGameUser">Player: Unknown</span>
                     <span id="engineTextBadge" style="font-size:11px; background:var(--habesha-red); color:white; padding:2px 7px; border-radius:4px; font-weight:bold;">Manual</span>
                 </div>
 
-                <div class="grid-90-layout" id="habeshaGrid90">
-                    </div>
+                <div class="grid-90-layout" id="habeshaGrid90"></div>
 
-                <div style="margin-top:15px; display:flex; gap:8px;">
+                <div style="margin-top:12px; display:flex; gap:8px;">
                     <button class="secondary-action-button" style="background:var(--habesha-red); color:white; border:none; flex:1;" onclick="exitCurrentGame()">ከጨዋታው ውጣ 🏳️</button>
                 </div>
             </div>
@@ -393,18 +393,16 @@
         <div id="info-page" class="app-page">
             <div class="reward-card-box">
                 <h3>💡 የ Stars አጠቃቀም የ AI መመሪያ</h3>
-                <div style="font-size:13px; line-height:1.6; color:#ddd; margin-top:8px; display:flex; flex-direction:column; gap:8px;">
-                    <p><strong>1. ስታርስ እንዴት ይገዛል?</strong><br>በቴሌግራም ውስጥ የቪዛ ካርድ ወይም የባንክ አካውንት በማገናኘት በቀላሉ መግዛት ይቻላል።</p>
-                    <p><strong>2. የክፍያ አፈፃፀም፦</strong><br>"Play 10 Stars" ሲጫኑ የቴሌግራም ሲስተም በራስ-ሰር ያረጋግጣል።</p>
-                    <p><strong>3. ማሸነፍ፦</strong><br>ቁጥሮች ተደራርበው መስመር ሲሰሩ ሲስተሙ ቼክ አድርጎ ወዲያውኑ ይሸልማል።</p>
+                <div style="font-size:13px; line-height:1.6; color:#ddd; margin-top:8px; display:flex; flex-direction:column; gap:6px;">
+                    <p><strong>1. ስታርስ እንዴት ይገዛል?</strong><br>በቴሌግራም ውስጥ የባንክ ካርድ በመጠቀም Stars በቀላሉ መግዛት ይቻላል።</p>
+                    <p><strong>2. የክፍያ አፈፃፀም፦</strong><br>"Play 10 Stars" ሲጫኑ የቴሌግራም ሲስተም ክፍያውን ያረጋግጣል።</p>
                 </div>
             </div>
 
             <div class="reward-card-box">
                 <h3>📜 የጨዋታ ታሪክ (History)</h3>
                 <div id="historyLogArea" style="margin-top:8px;">
-                    <div class="history-card-item"><span>Round #9901 (1-90 Grid)</span><span style="color:#4cd137; font-weight:bold;">+35 Stars Won</span></div>
-                    <div class="history-card-item"><span>Round #9884 (1-90 Grid)</span><span style="color:var(--habesha-red); font-weight:bold;">Forfeited</span></div>
+                    <div class="history-card-item"><span>Round #1240</span><span style="color:#4cd137; font-weight:bold;">+35 Stars Won</span></div>
                 </div>
             </div>
         </div>
@@ -418,11 +416,11 @@
         let gameEngine = 'manual';
         let currentShares = 0;
         let earnedTickets = 0;
-        let starTokens = 120;
+        let starTokens = 150;
         let autoIntervalEngine = null;
         let currentTgUser = "የቢንጎ ተጫዋች";
 
-        // የቴሌግራም ተጠቃሚን ስም በቀጥታ ማንበቢያ
+        // የቴሌግራም ላይቭ ስም ማንበቢያ
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             const u = tg.initDataUnsafe.user;
             currentTgUser = (u.first_name + ' ' + (u.last_name || '')).trim();
@@ -481,11 +479,8 @@
             });
         }
 
-        // የሀበሻ ቢንጎ 1-90 አግድም ሰሌዳ ማመንጫ
         function generateHabesha90Grid() {
             tg.HapticFeedback.notificationOccurred('success');
-            
-            // ወደ ነጭ እና ጥቁር የጨዋታ ገጽታ መቀየሪያ
             document.getElementById('layoutWrapper').className = "game-active-theme";
             document.getElementById('paywallContainer').style.display = 'none';
             document.getElementById('habeshaBoard').style.display = 'block';
@@ -493,7 +488,6 @@
             const container = document.getElementById('habeshaGrid90');
             container.innerHTML = '';
 
-            // ከ1 እስከ 90 በአግድም መደርደር
             for (let i = 1; i <= 90; i++) {
                 const numBox = document.createElement('div');
                 numBox.textContent = i;
@@ -508,7 +502,7 @@
 
         function markHabeshaNumber(element) {
             if (element.classList.contains('marked')) return;
-            element.classList.add('marked'); // ወደ ቀይ ክብ መቀየሪያ
+            element.classList.add('marked');
             tg.HapticFeedback.impactOccurred('light');
             checkWinningStatus();
         }
@@ -525,12 +519,11 @@
                 } else {
                     clearInterval(autoIntervalEngine);
                 }
-            }, 1000);
+            }, 800);
         }
 
         function checkWinningStatus() {
             const markedCells = document.querySelectorAll('.grid-90-layout div.marked').length;
-            // 15 ቁጥሮች ሲበሩ የሀበሻ ቢንጎ ህግ መሰረት ያሸንፋል
             if (markedCells >= 15) {
                 if (autoIntervalEngine) clearInterval(autoIntervalEngine);
                 triggerWinPayout();
@@ -539,7 +532,7 @@
 
         function triggerWinPayout() {
             tg.HapticFeedback.notificationOccurred('success');
-            starTokens += 35; // 35 Stars ሽልማት
+            starTokens += 35;
             document.getElementById('starsTokenVal').textContent = starTokens;
 
             const area = document.getElementById('historyLogArea');
@@ -548,7 +541,7 @@
             r.innerHTML = `<span>Round #${Math.floor(Math.random()*8000)+1000}</span><span style="color:#4cd137; font-weight:bold;">+35 Stars Won</span>`;
             area.insertBefore(r, area.firstChild);
 
-            tg.showAlert('🎉 ቢንጎ! በስኬት አሸንፈዋል! 35 Stars ወደ አካውንትዎ ገቢ ሆኗል።');
+            tg.showAlert('🎉 ቢንጎ! በስኬት አሸንፈዋል! 35 Stars ገቢ ሆኗል።');
             restoreLayoutToFront();
         }
 
@@ -564,7 +557,6 @@
             document.getElementById('habeshaBoard').style.display = 'none';
         }
 
-        // የሼር / የሪፈራል ሲስተም
         function sendTelegramInvite() {
             currentShares += 20;
             if (currentShares > 100) currentShares = 100;
@@ -572,9 +564,9 @@
             document.getElementById('shareCountLabel').textContent = currentShares;
             document.getElementById('barFillObj').style.width = currentShares + '%';
 
-            if (currentShares === 20) { earnedTickets += 1; showToastMessage("🎁 1 ነፃ ጨዋታ ተሸልመዋል!"); }
-            else if (currentShares === 40) { earnedTickets += 2; showToastMessage("🎁 2 ነፃ ጨዋታ ተሸልመዋል!"); }
-            else if (currentShares === 100) { earnedTickets += 5; showToastMessage("🎁 5 ነፃ ጨዋታ ተሸልመዋል!"); }
+            if (currentShares === 20) { earnedTickets += 1; }
+            else if (currentShares === 40) { earnedTickets += 2; }
+            else if (currentShares === 100) { earnedTickets += 5; }
 
             document.getElementById('ticketCounter').textContent = `Free Tickets: ${earnedTickets}`;
 
