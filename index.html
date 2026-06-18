@@ -3,495 +3,670 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Bingo Game - Telegram Mini App</title>
+    <title>Premium Bingo Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        :root {
+            --gold: #ffd700;
+            --dark-bg: #0f0f16;
+            --card-bg: rgba(30, 30, 45, 0.7);
+            --neon-glow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: var(--dark-bg);
             color: white;
-            padding: 15px;
             min-height: 100vh;
+            overflow-x: hidden;
             user-select: none;
             -webkit-user-select: none;
         }
-        
-        .container {
-            max-width: 450px;
+
+        /* ገጽታ 1፦ የፊት ገጽ (Premium Dark & Gold) */
+        .premium-theme {
+            background: radial-gradient(circle at top, #231b03 0%, #0a0a0f 100%);
+        }
+
+        /* ገጽታ 2፦ የጨዋታ ገጽ (Modern White & Black) */
+        .game-active-theme {
+            background: radial-gradient(circle at top, #f0f2f5 0%, #dcdde1 100%) !important;
+            color: #111 !important;
+        }
+
+        .app-container {
+            max-width: 480px;
             margin: 0 auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .game-active-theme .nav-tabs {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            color: #aaa;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .game-active-theme .tab-btn { color: #555; }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            color: #000 !important;
+            box-shadow: var(--neon-glow);
+        }
+
+        .page { display: none; }
+        .page.active { display: flex; flex-direction: column; gap: 15px; }
+
+        /* User Profile Header */
+        .user-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .game-active-theme .user-header {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--gold); border: 2px solid white; display: flex; align-items: center; justify-content: center; font-weight: bold; color: black; }
+        .username { font-weight: 700; font-size: 15px; }
+        .balance-badge { background: linear-gradient(135deg, #ffd700, #ffa500); color: black; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 13px; }
+
+        /* GIF Section */
+        .gif-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
         }
-        
-        header {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+
+        .game-active-theme .gif-card {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
-        
-        h1 {
-            font-size: 26px;
-            margin-bottom: 5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .subtitle {
-            color: #e0e0e0;
-            font-size: 14px;
-        }
-        
-        .gif-section {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .gif-container {
+
+        .gif-frame {
             width: 100%;
-            height: 180px;
+            height: 160px;
+            background: #000;
+            border-radius: 12px;
             margin: 10px 0;
-            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            background: rgba(0, 0, 0, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        
-        .gif-container img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        .gif-loading {
-            color: #e0e0e0;
-            font-style: italic;
-            font-size: 14px;
-        }
-        
-        .board-card {
-            background: rgba(20, 20, 35, 0.6);
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            position: relative;
-        }
 
-        .paywall-overlay {
-            background: rgba(15, 15, 25, 0.95);
-            border-radius: 12px;
-            padding: 25px 15px;
+        .gif-frame img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        /* Paywall Area */
+        .paywall-box {
+            background: linear-gradient(135deg, #1e1e2f 0%, #0f0f1a 100%);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            border: 2px solid var(--gold);
+            box-shadow: var(--neon-glow);
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             gap: 15px;
         }
 
-        .paywall-overlay h3 {
-            font-size: 16px;
-            color: #ffd700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
+        .paywall-box h2 { color: var(--gold); font-size: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .paywall-box p { color: #ccc; font-size: 13px; line-height: 1.5; }
 
-        .paywall-overlay p {
-            font-size: 13px;
-            color: #b0b0b0;
-        }
-
-        .pay-btn {
-            background: linear-gradient(135deg, #ffd700, #ffa500);
-            color: #111 !important;
-            font-weight: 700;
-            font-size: 16px;
-            padding: 14px 30px;
-            border: none;
+        /* Mode Selectors (Auto / Manual) */
+        .mode-container {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px;
             border-radius: 10px;
-            cursor: pointer;
             width: 100%;
-            max-width: 250px;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-            transition: transform 0.2s;
+            margin-top: 10px;
         }
 
-        .pay-btn:active {
-            transform: scale(0.98);
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            background: none;
+            border: none;
+            color: #777;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
         }
 
-        .bingo-board {
+        .mode-btn.active {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Bingo Board (White & Black) */
+        .board-container {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: none;
+        }
+
+        .bingo-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 6px;
-            display: none; /* ከመከፈሉ በፊት ይደበቃል */
         }
-        
-        .bingo-board td {
+
+        .bingo-table td {
             width: 20%;
-            height: 60px;
+            height: 55px;
             text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            font-weight: bold;
+            background: #f8f9fa;
+            color: #222;
             font-size: 18px;
-            transition: all 0.2s ease;
+            font-weight: 700;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
             cursor: pointer;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            transition: all 0.2s;
         }
-        
-        .free-cell {
-            background: rgba(255, 215, 0, 0.2) !important;
-            color: #ffd700;
-            border: 1px solid rgba(255, 215, 0, 0.4) !important;
-        }
-        
-        .marked {
-            background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
+
+        .bingo-table td:hover { background: #e2e6ea; }
+
+        .bingo-table td.marked {
+            background: linear-gradient(135deg, #111111, #333333) !important;
             color: white !important;
-            border: 1px solid #81c784 !important;
-            position: relative;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+            border-color: #111 !important;
+            transform: scale(0.95);
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.3);
         }
-        
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 15px;
+
+        .bingo-table td.free-cell {
+            background: linear-gradient(135deg, #ffd700, #ffa500) !important;
+            color: black !important;
+            border-color: #ffa500 !important;
         }
-        
-        .control-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            width: 100%;
-        }
-        
-        button {
-            padding: 12px 15px;
+
+        /* Action Buttons */
+        .btn-prime {
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            color: black;
             border: none;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            padding: 14px 28px;
+            font-weight: 700;
+            font-size: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .btn-prime:active { transform: scale(0.98); }
+
+        .btn-sec {
+            background: rgba(255, 255, 255, 0.1);
             color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 15px;
             font-weight: 600;
             font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            flex: 1;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-        
-        button:active {
-            transform: translateY(1px);
-        }
-        
-        button:disabled {
-            background: #555 !important;
-            color: #aaa;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        
-        .download-btn { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
-        .share-btn { background: linear-gradient(135deg, #a8e6cf, #56ab2f); }
-        .multiplier { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); }
-        
-        .footer {
-            margin-top: 25px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 11px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
+            cursor: pointer;
+            flex: 1;
         }
-        
-        .notification {
+
+        .game-active-theme .btn-sec {
+            background: #f1f2f6;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        /* Referral System Styling */
+        .share-status-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            height: 12px;
+            width: 100%;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #ffd700, #ffa500);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .milestones {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        /* AI Guide & History List */
+        .ai-guide-box {
+            background: rgba(255, 215, 0, 0.05);
+            border-left: 4px solid var(--gold);
+            padding: 12px;
+            border-radius: 4px 12px 12px 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .history-win { color: #4cd137; font-weight: bold; }
+        .history-loss { color: #e84118; font-weight: bold; }
+
+        /* Notifications */
+        .toast {
             position: fixed;
-            top: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.9);
-            color: #ffd700;
+            color: var(--gold);
             padding: 10px 20px;
-            border-radius: 20px;
-            z-index: 1000;
-            display: none;
+            border-radius: 30px;
             font-size: 13px;
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-        
-        .gif-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 10px;
+            z-index: 10000;
+            display: none;
+            border: 1px solid var(--gold);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
     </style>
 </head>
-<body>
-    <div class="notification" id="notification"></div>
-    
-    <div class="container">
-        <header>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                <span>🎯</span>
-                <h1>Bingo Game</h1>
-                <span>🎯</span>
-            </div>
-            <div class="subtitle">Telegram Mini App with Stars Reward</div>
-        </header>
-        
-        <div class="gif-section">
-            <h2 style="font-size: 16px;">🎉 Bingo Celebration GIF</h2>
-            <div class="gif-container">
-                <div class="gif-loading" id="gifLoading">Loading celebration GIF...</div>
-                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbms1N2N5amM5Z2gwaXp1ZndpOHRjdms1N3V6am84bXpndXN0Z3V6YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7aD2sa1WcWQn6rZe/giphy.gif" 
-                     alt="Bingo Celebration" 
-                     id="bingoGif"
-                     style="display: none;"
-                     onload="gifLoaded()"
-                     onerror="gifError()">
-            </div>
-            <div class="gif-controls">
-                <button class="download-btn" onclick="downloadGif()" id="downloadBtn" disabled>📥 Download GIF</button>
-                <button class="share-btn" onclick="shareGif()" id="shareBtn" disabled>📱 Share GIF</button>
-            </div>
+<body class="premium-theme" id="bodyWrapper">
+
+    <div class="toast" id="toastMessage"></div>
+
+    <div class="app-container">
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('game-tab')">🎮 Play</button>
+            <button class="tab-btn" onclick="switchTab('share-tab')">🎁 Rewards</button>
+            <button class="tab-btn" onclick="switchTab('ai-tab')">💡 AI Guide & History</button>
         </div>
-        
-        <div class="board-card">
-            <div class="paywall-overlay" id="paywall">
-                <h3>⭐ ዙሩን ለመጀመር 10 Stars መክፈል ያስፈልጋል</h3>
-                <p>በቴሌግራም Stars ከፍለው ቦርዱን ያግብሩ እና ይጫወቱ!</p>
-                <button class="pay-btn" onclick="payToPlay()">Pay 10 Stars ⭐</button>
+
+        <div class="user-header">
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">U</div>
+                <div>
+                    <div class="username" id="userNameLabel">Player Telegram</div>
+                    <div style="font-size: 11px; color: #888;" id="userStatus">Free Tickets: 0</div>
+                </div>
+            </div>
+            <div class="balance-badge">⭐ <span id="starBalance">100</span> Stars</div>
+        </div>
+
+        <div id="game-tab" class="page active">
+            <div class="gif-card">
+                <div style="font-size: 14px; font-weight: bold;">🎉 Bingo Celebration Animation</div>
+                <div class="gif-frame">
+                    <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY2Z3I4Z3I5bXo1M3VxdHptbWN3ZzRkbW5pYnZ4ZTh6NTV6eThmZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/80ndgXvUe2vM4/giphy.gif" alt="Bingo Celebration">
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-sec" onclick="shareToTelegram()">Share GIF 📱</button>
+                </div>
             </div>
 
-            <table class="bingo-board" id="gameBoard">
-                <tr>
-                    <td onclick="clickCell(this)">53</td>
-                    <td onclick="clickCell(this)">39</td>
-                    <td onclick="clickCell(this)">48</td>
-                    <td onclick="clickCell(this)">12</td>
-                    <td onclick="clickCell(this)">26</td>
-                </tr>
-                <tr>
-                    <td onclick="clickCell(this)">5</td>
-                    <td onclick="clickCell(this)">17</td>
-                    <td onclick="clickCell(this)">74</td>
-                    <td onclick="clickCell(this)">57</td>
-                    <td onclick="clickCell(this)">31</td>
-                </tr>
-                <tr>
-                    <td onclick="clickCell(this)">8</td>
-                    <td onclick="clickCell(this)">29</td>
-                    <td class="free-cell marked">FREE</td>
-                    <td onclick="clickCell(this)">41</td>
-                    <td onclick="clickCell(this)">71</td>
-                </tr>
-                <tr>
-                    <td onclick="clickCell(this)">63</td>
-                    <td onclick="clickCell(this)">24</td>
-                    <td onclick="clickCell(this)">20</td>
-                    <td onclick="clickCell(this)">33</td>
-                    <td onclick="clickCell(this)">46</td>
-                </tr>
-                <tr>
-                    <td onclick="clickCell(this)">14</td>
-                    <td onclick="clickCell(this)">65</td>
-                    <td onclick="clickCell(this)">9</td>
-                    <td onclick="clickCell(this)">60</td>
-                    <td onclick="clickCell(this)">22</td>
-                </tr>
-            </table>
-        </div>
-        
-        <div class="controls">
-            <div class="control-group">
-                <button class="multiplier">1.0x Multiplier</button>
-                <button onclick="shareGame()">📱 Share Game</button>
+            <div class="paywall-box" id="paywallArea">
+                <h2>⭐ Premium Entry</h2>
+                <p>ይህንን ዙር ለመጀመር 10 የቴሌግራም Stars መክፈል ያስፈልጋል። ሲያሸንፉ የዕጥፍ ዕጥፍ ይሸለማሉ!</p>
+                
+                <div class="mode-container">
+                    <button class="mode-btn active" id="modeManual" onclick="setMode('manual')">Manual Play</button>
+                    <button class="mode-btn" id="modeAuto" onclick="setMode('auto')">Auto Play (AI)</button>
+                </div>
+
+                <button class="btn-prime" onclick="processPremiumPayment()">Pay 10 Stars ⭐</button>
             </div>
-            <div class="control-group">
-                <button style="background: #444;" onclick="addToCollection()">📚 Collection</button>
-                <button style="background: #444;" onclick="forkGame()">🍴 Fork</button>
-                <button style="background: #444;" onclick="exportGame()">📤 Export</button>
+
+            <div class="board-container" id="boardWrapperBox">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="font-weight: bold; font-size: 14px;">🎯 Match numbers to win!</span>
+                    <span id="gameModeIndicator" style="font-size: 12px; background: #222; color: #fff; padding: 3px 8px; border-radius: 5px;">Manual</span>
+                </div>
+                <table class="bingo-table" id="bingoGrid">
+                    </table>
+                <div style="margin-top: 15px; display: flex; gap: 8px;">
+                    <button class="btn-sec" style="background:#e84118; color:white; border:none;" onclick="forfeitMatch()">Quit Round</button>
+                </div>
             </div>
         </div>
-        
-        <div class="footer">
-            <p>Bingo Game - @Bingo_lehulum_bot</p>
-            <p style="margin-top: 5px; font-size: 10px; color: #aaa;">Click on numbers to mark them. Get BINGO to win!</p>
+
+        <div id="share-tab" class="page">
+            <div class="share-status-card">
+                <h3>🎁 Invite Friends Reward</h3>
+                <p style="font-size: 13px; color: #ccc; margin-top: 5px;">ጨዋታውን ለጓደኞችዎ በቴሌግራም በማጋራት ነፃ የቢንጎ መጫወቻ ቲኬቶችን በነፃ ይውሰዱ!</p>
+                
+                <div style="margin-top: 15px; font-weight: bold; font-size: 14px;">
+                    စုቅል የተደረገ የሼር ብዛት: <span id="totalSharesCount" style="color:var(--gold);">0</span> / 100
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="shareProgressBar"></div>
+                </div>
+
+                <div class="milestones">
+                    <span>20 Shares (1 tkt)</span>
+                    <span>40 (2 tkts)</span>
+                    <span>100 (5 tkts)</span>
+                </div>
+
+                <button class="btn-prime" style="margin-top: 20px;" onclick="triggerReferralShare()">Invite/Share Now 📱</button>
+            </div>
         </div>
+
+        <div id="ai-tab" class="page">
+            <div class="share-status-card">
+                <h3>💡 የ AI ትምህርት መመሪያ (How to Buy Stars)</h3>
+                <div class="ai-guide-box" style="margin-top: 10px;">
+                    <strong>1. Stars እንዴት ይገዛል?</strong><br>
+                    በቴሌግራም ውስጥ በቀጥታ በቪዛ (Visa) ወይም በ ፍራንክ የባንክ አካውንት በመጠቀም የቴሌግራም Stars መግዛት ይችላሉ።<br><br>
+                    <strong>2. የክፍያ ሂደት፦</strong><br>
+                    "Pay 10 Stars" የሚለውን ሲጫኑ የቴሌግራም ኦፊሴላዊ የክፍያ ቦክስ ይመጣል። ክፍያውን ሲያጠናቅቁ ቦርዱ ይከፈታል።<br><br>
+                    <strong>3. ማውጣት (Withdrawal)፦</strong><br>
+                    ያሸነፉትን የStars መጠን በቴሌግራም Fragment በኩል ወደ እውነተኛ ገንዘብ መቀየር ወይም ለሌላ ጨዋታ መጠቀም ይችላሉ።
+                </div>
+            </div>
+
+            <div class="share-status-card">
+                <h3>📜 የጨዋታ ታሪክ (Match History)</h3>
+                <div id="historyLogContainer" style="margin-top: 10px; display:flex; flex-direction:column; gap:5px;">
+                    <div class="history-item"><span>Round #1024 (Paid 10 Stars)</span><span class="history-win">+20 Stars Won</span></div>
+                    <div class="history-item"><span>Round #1021 (Paid 10 Stars)</span><span class="history-loss">Lost</span></div>
+                </div>
+            </div>
+        </div>
+
     </div>
-    
+
     <script>
+        // Telegram Mini App Initialization
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
-        
-        tg.setHeaderColor('#764ba2');
-        tg.setBackgroundColor('#764ba2');
 
-        let isGamePaid = false;
+        // App States
+        let currentMode = 'manual'; // manual or auto
+        let userShares = 0;
+        let freeTickets = 0;
+        let starBalance = 120;
+        let autoPlayInterval = null;
 
-        function payToPlay() {
-            tg.showPopup({
-                title: 'Ozen Pay-To-Play',
-                message: 'ይህንን የቢንጎ ዙር ለመጫወት 10 የቴሌግራም Stars መክፈል ይፈልጋሉ?',
-                buttons: [
-                    {id: 'pay', type: 'ok', text: 'አዎ ክፈል (Pay)'},
-                    {id: 'cancel', type: 'cancel', text: 'ይቅር'}
-                ]
-            }, function(buttonId) {
-                if (buttonId === 'pay') {
-                    isGamePaid = true;
-                    document.getElementById('paywall').style.display = 'none';
-                    document.getElementById('gameBoard').style.display = 'table';
-                    tg.HapticFeedback.notificationOccurred('success');
-                    showNotification('🎰 ክፍያዎ ተጠናቋል! መልካም ዕድል!');
-                }
-            });
+        // Fetch Telegram User Data Dynamically
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            const user = tg.initDataUnsafe.user;
+            document.getElementById('userNameLabel').textContent = (user.first_name + ' ' + (user.last_name || '')).trim();
+            if(user.username) {
+                document.getElementById('userAvatar').textContent = user.first_name.charAt(0).toUpperCase();
+            }
         }
 
-        function gifLoaded() {
-            document.getElementById('gifLoading').style.display = 'none';
-            document.getElementById('bingoGif').style.display = 'block';
-            document.getElementById('downloadBtn').disabled = false;
-            document.getElementById('shareBtn').disabled = false;
-        }
-        
-        function gifError() {
-            document.getElementById('gifLoading').innerHTML = 'Loading fallback...';
-            document.getElementById('bingoGif').src = 'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif';
-        }
-        
-        function clickCell(cell) {
-            if (!isGamePaid) return;
-            cell.classList.toggle('marked');
+        // Navigation Management
+        function switchTab(tabId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
             tg.HapticFeedback.impactOccurred('light');
-            checkBingo();
         }
-        
-        function checkBingo() {
-            const table = document.getElementById('gameBoard');
-            const rows = table.rows;
-            let win = false;
 
-            // Horizontal rows check
-            for (let i = 0; i < 5; i++) {
-                let rowMarked = true;
-                for (let j = 0; j < 5; j++) {
-                    if (!rows[i].cells[j].classList.contains('marked')) rowMarked = false;
-                }
-                if (rowMarked) win = true;
-            }
-
-            // Vertical columns check
-            for (let j = 0; j < 5; j++) {
-                let colMarked = true;
-                for (let i = 0; i < 5; i++) {
-                    if (!rows[i].cells[j].classList.contains('marked')) colMarked = false;
-                }
-                if (colMarked) win = true;
-            }
-
-            // Diagonal 1 check
-            if (rows[0].cells[0].classList.contains('marked') &&
-                rows[1].cells[1].classList.contains('marked') &&
-                rows[2].cells[2].classList.contains('marked') &&
-                rows[3].cells[3].classList.contains('marked') &&
-                rows[4].cells[4].classList.contains('marked')) {
-                win = true;
-            }
-
-            // Diagonal 2 check
-            if (rows[0].cells[4].classList.contains('marked') &&
-                rows[1].cells[3].classList.contains('marked') &&
-                rows[2].cells[2].classList.contains('marked') &&
-                rows[3].cells[1].classList.contains('marked') &&
-                rows[4].cells[0].classList.contains('marked')) {
-                win = true;
-            }
-
-            if (win) {
-                tg.HapticFeedback.notificationOccurred('success');
-                tg.showAlert('🎉 BINGO! በስኬት አሸንፈዋል! የእርሶ የሽልማት Stars ወደ አካውንትዎ ይላካል።');
-                
-                createConfetti();
-                setTimeout(() => { resetBoard(); }, 5000);
-            }
+        // Toggle Manual/Auto Mode
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('modeManual').classList.toggle('active', mode === 'manual');
+            document.getElementById('modeAuto').classList.toggle('active', mode === 'auto');
+            document.getElementById('gameModeIndicator').textContent = mode === 'manual' ? 'Manual' : 'Auto Play (AI)';
+            tg.HapticFeedback.impactOccurred('light');
         }
-        
-        function resetBoard() {
-            const cells = document.querySelectorAll('.bingo-board td');
-            cells.forEach(c => {
-                if (!c.classList.contains('free-cell')) c.classList.remove('marked');
+
+        // Toast Messages
+        function showToast(msg) {
+            const toast = document.getElementById('toastMessage');
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        // Core Payment Logic (10 Stars Payment Process)
+        function processPremiumPayment() {
+            if (starBalance < 10 && freeTickets <= 0) {
+                tg.showAlert('⚠️ በቂ Stars የለዎትም! እባክዎ መጀመሪያ Stars ይግዙ።');
+                return;
+            }
+
+            tg.showPopup({
+                title: 'Confirm Ticket Entry',
+                message: freeTickets > 0 ? 'ካለዎት ነፃ የጨዋታ ቲኬት ላይ 1 ተቀንሶ መጫወት ይፈልጋሉ?' : 'ይህንን ጨዋታ ለመጀመር 10 Stars መክፈል ይፈልጋሉ?',
+                buttons: [
+                    {id: 'yes', type: 'ok', text: 'አዎ ጀምር'},
+                    {id: 'no', type: 'cancel', text: 'ይቅር'}
+                ]
+            }, function(btnId) {
+                if (btnId === 'yes') {
+                    if (freeTickets > 0) {
+                        freeTickets--;
+                        document.getElementById('userStatus').textContent = `Free Tickets: ${freeTickets}`;
+                    } else {
+                        starBalance -= 10;
+                        document.getElementById('starBalance').textContent = starBalance;
+                    }
+                    launchBingoMatch();
+                }
             });
-            isGamePaid = false;
-            document.getElementById('gameBoard').style.display = 'none';
-            document.getElementById('paywall').style.display = 'flex';
         }
 
-        function createConfetti() {
-            const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#00ff00', '#ffffff'];
-            for (let i = 0; i < 30; i++) {
-                const confetti = document.createElement('div');
-                confetti.style.position = 'fixed';
-                confetti.style.width = '8px';
-                confetti.style.height = '8px';
-                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.borderRadius = '50%';
-                confetti.style.top = '-10px';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.zIndex = '9999';
-                confetti.style.animation = `confettiFall ${Math.random() * 2 + 1.5}s linear forwards`;
-                document.body.appendChild(confetti);
-                setTimeout(() => { document.body.removeChild(confetti); }, 3500);
+        // Generate Random Bingo Numbers
+        function launchBingoMatch() {
+            tg.HapticFeedback.notificationOccurred('success');
+            
+            // UI Theme shift to White & Black
+            document.getElementById('bodyWrapper').className = "game-active-theme";
+            document.getElementById('paywallArea').style.display = 'none';
+            document.getElementById('boardWrapperBox').style.display = 'block';
+
+            const grid = document.getElementById('bingoGrid');
+            grid.innerHTML = '';
+            
+            // Generate matrix pool
+            let numbers = [];
+            while(numbers.length < 24) {
+                let r = Math.floor(Math.random() * 75) + 1;
+                if(numbers.indexOf(r) === -1) numbers.push(r);
+            }
+
+            let numIdx = 0;
+            for (let r = 0; r < 5; r++) {
+                let row = document.createElement('tr');
+                for (let c = 0; c < 5; c++) {
+                    let cell = document.createElement('td');
+                    if (r === 2 && c === 2) {
+                        cell.textContent = 'FREE';
+                        cell.className = 'free-cell marked';
+                    } else {
+                        cell.textContent = numbers[numIdx++];
+                        cell.onclick = function() { clickCell(this); };
+                    }
+                    row.appendChild(cell);
+                }
+                grid.appendChild(row);
+            }
+
+            // Trigger AI Auto Play if activated
+            if (currentMode === 'auto') {
+                runAIAutoPlay();
             }
         }
-        
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.style.display = 'block';
-            setTimeout(() => { notification.style.display = 'none'; }, 3000);
-        }
-        
-        function downloadGif() {
-            const gifUrl = document.getElementById('bingoGif').src;
-            window.open(gifUrl, '_blank');
-            showNotification('GIF Opened! Save to your gallery.');
-        }
-        
-        function shareGif() {
-            const gifUrl = document.getElementById('bingoGif').src;
-            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(gifUrl)}&text=Bingo Winner! 🎉`);
+
+        // Manual cell selection
+        function clickCell(cell) {
+            if (cell.classList.contains('marked')) return;
+            cell.classList.add('marked');
+            tg.HapticFeedback.impactOccurred('light');
+            verifyBingoWin();
         }
 
-        function shareGame() {
-            tg.HapticFeedback.impactOccurred('medium');
-            const shareText = "🎯 @Bingo_lehulum_bot ላይ ቢንጎ ተጫውተህ የቴሌግራም Stars ሸልም!";
+        // AI System Auto-Play Engine
+        function runAIAutoPlay() {
+            showToast("🤖 AI Auto-Play ተጀምሯል...");
+            autoPlayInterval = setInterval(() => {
+                const unMarkedCells = Array.from(document.querySelectorAll('#bingoGrid td:not(.marked)'));
+                if (unMarkedCells.length > 0) {
+                    const randomCell = unMarkedCells[Math.floor(Math.random() * unMarkedCells.length)];
+                    randomCell.classList.add('marked');
+                    tg.HapticFeedback.impactOccurred('light');
+                    verifyBingoWin();
+                } else {
+                    clearInterval(autoPlayInterval);
+                }
+            }, 1200);
+        }
+
+        // Check columns, rows, and diagonals for Bingo
+        function verifyBingoWin() {
+            const rows = document.querySelectorAll('#bingoGrid tr');
+            if (rows.length === 0) return;
+            
+            let won = false;
+
+            // Row check
+            rows.forEach(row => {
+                let cells = row.querySelectorAll('td');
+                if (Array.from(cells).every(c => c.classList.contains('marked'))) won = true;
+            });
+
+            // Column check
+            for (let c = 0; c < 5; c++) {
+                let colMarked = true;
+                for (let r = 0; r < 5; r++) {
+                    if (!rows[r].querySelectorAll('td')[c].classList.contains('marked')) colMarked = false;
+                }
+                if (colMarked) won = true;
+            }
+
+            if (won) {
+                if (autoPlayInterval) clearInterval(autoPlayInterval);
+                executeWinSensation();
+            }
+        }
+
+        // Win Sensation UI Response
+        function executeWinSensation() {
+            tg.HapticFeedback.notificationOccurred('success');
+            starBalance += 30; // 30 Stars Prize
+            document.getElementById('starBalance').textContent = starBalance;
+            
+            // Add to history log
+            const container = document.getElementById('historyLogContainer');
+            const log = document.createElement('div');
+            log.className = 'history-item';
+            log.innerHTML = `<span>Round #${Math.floor(Math.random() * 9000) + 1000}</span><span class="history-win">+30 Stars Won</span>`;
+            container.insertBefore(log, container.firstChild);
+
+            tg.showAlert('🎉 BINGO! እጅግ በጣም ግሩም ጨዋታ! 30 Stars በስኬት አሸንፈዋል!');
+            cleanupMatchUI();
+        }
+
+        function forfeitMatch() {
+            if (autoPlayInterval) clearInterval(autoPlayInterval);
+            showToast("🏳️ ከጨዋታው ወጥተዋል!");
+            cleanupMatchUI();
+        }
+
+        function cleanupMatchUI() {
+            document.getElementById('bodyWrapper').className = "premium-theme";
+            document.getElementById('paywallArea').style.display = 'flex';
+            document.getElementById('boardWrapperBox').style.display = 'none';
+        }
+
+        // Referral System (Milestones logic)
+        function triggerReferralShare() {
+            userShares += 20; // Simulated increase for demonstration per dynamic click
+            if (userShares > 100) userShares = 100;
+
+            document.getElementById('totalSharesCount').textContent = userShares;
+            
+            // Progress Bar Update
+            const progress = document.getElementById('shareProgressBar');
+            progress.style.width = userShares + '%';
+
+            // Reward distribution algorithm
+            if (userShares === 20) { freeTickets = 1; showToast("🎁 20 ሰዎችን ስለጋበዙ 1 ነፃ ጨዋታ ተሸልመዋል!"); }
+            else if (userShares === 40) { freeTickets = 2; showToast("🎁 40 ሰዎችን ስለጋበዙ 2 ነፃ ጨዋታ ተሸልመዋል!"); }
+            else if (userShares === 100) { freeTickets = 5; showToast("🎁 100 ሰዎችን ስለጋበዙ 5 ነፃ ጨዋታ ተሸልመዋል!"); }
+            
+            document.getElementById('userStatus').textContent = `Free Tickets: ${freeTickets}`;
+
+            // Actual Telegram Invite dialog
+            const shareText = "🎯 ድንቅ የቢንጎ ጨዋታ በቴሌግራም Stars ሽልማት ጋር! ተጫውተህ አሸንፍ!";
             const botLink = "https://t.me/Bingo_lehulum_bot/app";
             tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(botLink)}&text=${encodeURIComponent(shareText)}`);
         }
-        
-        function addToCollection() { showNotification('🎯 Added to collection!'); }
-        function forkGame() { showNotification('🍴 Game forked!'); }
-        function exportGame() { showNotification('📤 Game exported!'); }
+
+        function shareToTelegram() {
+            const gifUrl = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY2Z3I4Z3I5bXo1M3VxdHptbWN3ZzRkbW5pYnZ4ZTh6NTV6eThmZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/80ndgXvUe2vM4/giphy.gif";
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(gifUrl)}&text=I%20am%20playing%20Bingo!%20🎯`);
+        }
     </script>
 </body>
 </html>
