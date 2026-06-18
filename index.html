@@ -16,22 +16,21 @@
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
+            padding: 15px;
             min-height: 100vh;
             user-select: none;
             -webkit-user-select: none;
         }
         
         .container {
-            max-width: 500px;
+            max-width: 450px;
             margin: 0 auto;
             text-align: center;
-            position: relative;
         }
         
         header {
-            margin-bottom: 30px;
-            padding: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             backdrop-filter: blur(10px);
@@ -39,20 +38,20 @@
         }
         
         h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
+            font-size: 26px;
+            margin-bottom: 5px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         
         .subtitle {
             color: #e0e0e0;
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .gif-section {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -60,12 +59,12 @@
         
         .gif-container {
             width: 100%;
-            height: 200px;
-            margin: 15px 0;
+            height: 180px;
+            margin: 10px 0;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -75,166 +74,150 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            border-radius: 8px;
-            transition: transform 0.5s ease;
         }
         
         .gif-loading {
             color: #e0e0e0;
             font-style: italic;
+            font-size: 14px;
         }
         
-        .board-container {
+        .board-card {
+            background: rgba(20, 20, 35, 0.6);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             position: relative;
-            margin: 20px 0;
         }
 
-        .bingo-board {
-            width: 100%;
-            border-collapse: collapse;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .bingo-board td {
-            width: 20%;
-            height: 70px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-weight: bold;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .bingo-board td:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .free-cell {
-            background: rgba(255, 215, 0, 0.3) !important;
-            color: #ffd700;
-        }
-        
-        .marked {
-            background: rgba(76, 175, 80, 0.4) !important;
-            color: #a5d6a7;
-            position: relative;
-        }
-        
-        .marked::after {
-            content: "✓";
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 14px;
-            color: #4caf50;
-        }
-        
-        /* የክፍያ ገጽታ መደራረቢያ (Paywall Overlay) */
         .paywall-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(5px);
-            z-index: 50;
+            background: rgba(15, 15, 25, 0.95);
             border-radius: 12px;
+            padding: 25px 15px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            gap: 15px;
         }
 
         .paywall-overlay h3 {
             font-size: 16px;
-            margin-bottom: 10px;
             color: #ffd700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .paywall-overlay p {
-            font-size: 11px;
-            color: #ccc;
-            margin-bottom: 15px;
+            font-size: 13px;
+            color: #b0b0b0;
         }
 
         .pay-btn {
-            background: linear-gradient(135deg, #ffd700, #ffa500) !important;
-            color: black !important;
-            font-weight: 800 !important;
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            color: #111 !important;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 250px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            transition: transform 0.2s;
         }
 
+        .pay-btn:active {
+            transform: scale(0.98);
+        }
+
+        .bingo-board {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 6px;
+            display: none; /* ከመከፈሉ በፊት ይደበቃል */
+        }
+        
+        .bingo-board td {
+            width: 20%;
+            height: 60px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .free-cell {
+            background: rgba(255, 215, 0, 0.2) !important;
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.4) !important;
+        }
+        
+        .marked {
+            background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
+            color: white !important;
+            border: 1px solid #81c784 !important;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
         .controls {
             display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
         }
         
         .control-group {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
             justify-content: center;
+            width: 100%;
         }
         
         button {
-            padding: 12px 20px;
+            padding: 12px 15px;
             border: none;
             border-radius: 8px;
             background: linear-gradient(135deg, #ff6b6b, #ee5a24);
             color: white;
             font-weight: 600;
+            font-size: 13px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+            flex: 1;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
         
         button:active {
-            transform: translateY(0);
+            transform: translateY(1px);
         }
         
         button:disabled {
-            background: #cccccc;
+            background: #555 !important;
+            color: #aaa;
             cursor: not-allowed;
-            transform: none;
             box-shadow: none;
-            color: #666;
         }
         
-        .download-btn {
-            background: linear-gradient(135deg, #4ecdc4, #44a08d);
-        }
-        
-        .share-btn {
-            background: linear-gradient(135deg, #a8e6cf, #56ab2f);
-        }
-        
-        .multiplier {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+        .download-btn { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
+        .share-btn { background: linear-gradient(135deg, #a8e6cf, #56ab2f); }
+        .multiplier { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); }
         
         .footer {
-            margin-top: 30px;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 12px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 11px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
-            backdrop-filter: blur(10px);
         }
         
         .notification {
@@ -242,48 +225,22 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #ffd700;
+            padding: 10px 20px;
+            border-radius: 20px;
             z-index: 1000;
             display: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            font-size: 13px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         
         .gif-controls {
             display: flex;
             gap: 10px;
             justify-content: center;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .bingo-title {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .bingo-title span {
-            font-size: 24px;
-        }
-        
-        @media (max-width: 480px) {
-            .controls {
-                flex-direction: column;
-            }
-            
-            .control-group {
-                width: 100%;
-            }
-            
-            button {
-                flex: 1;
-                min-width: 120px;
-            }
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -292,19 +249,19 @@
     
     <div class="container">
         <header>
-            <div class="bingo-title">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <span>🎯</span>
                 <h1>Bingo Game</h1>
                 <span>🎯</span>
             </div>
-            <div class="subtitle">Telegram Mini App with GIF Support</div>
+            <div class="subtitle">Telegram Mini App with Stars Reward</div>
         </header>
         
         <div class="gif-section">
-            <h2>🎉 Bingo Celebration GIF</h2>
+            <h2 style="font-size: 16px;">🎉 Bingo Celebration GIF</h2>
             <div class="gif-container">
                 <div class="gif-loading" id="gifLoading">Loading celebration GIF...</div>
-                <img src="https://media.giphy.com/media/3o7aD2sa1WcWQn6rZe/giphy.gif" 
+                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbms1N2N5amM5Z2gwaXp1ZndpOHRjdms1N3V6am84bXpndXN0Z3V6YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7aD2sa1WcWQn6rZe/giphy.gif" 
                      alt="Bingo Celebration" 
                      id="bingoGif"
                      style="display: none;"
@@ -317,14 +274,14 @@
             </div>
         </div>
         
-        <div class="board-container">
+        <div class="board-card">
             <div class="paywall-overlay" id="paywall">
                 <h3>⭐ ዙሩን ለመጀመር 10 Stars መክፈል ያስፈልጋል</h3>
                 <p>በቴሌግራም Stars ከፍለው ቦርዱን ያግብሩ እና ይጫወቱ!</p>
                 <button class="pay-btn" onclick="payToPlay()">Pay 10 Stars ⭐</button>
             </div>
 
-            <table class="bingo-board">
+            <table class="bingo-board" id="gameBoard">
                 <tr>
                     <td onclick="clickCell(this)">53</td>
                     <td onclick="clickCell(this)">39</td>
@@ -366,38 +323,35 @@
         <div class="controls">
             <div class="control-group">
                 <button class="multiplier">1.0x Multiplier</button>
+                <button onclick="shareGame()">📱 Share Game</button>
             </div>
             <div class="control-group">
-                <button onclick="addToCollection()">📚 Add to Collection</button>
-                <button onclick="forkGame()">🍴 Fork Game</button>
-                <button onclick="exportGame()">📤 Export</button>
-                <button onclick="shareGame()">📱 Share Game</button>
+                <button style="background: #444;" onclick="addToCollection()">📚 Collection</button>
+                <button style="background: #444;" onclick="forkGame()">🍴 Fork</button>
+                <button style="background: #444;" onclick="exportGame()">📤 Export</button>
             </div>
         </div>
         
         <div class="footer">
-            <p>Bingo Game - Telegram Mini App with GIF Download Support</p>
-            <p style="margin-top: 8px; font-size: 10px;">Click on numbers to mark them. Get BINGO to celebrate!</p>
+            <p>Bingo Game - @Bingo_lehulum_bot</p>
+            <p style="margin-top: 5px; font-size: 10px; color: #aaa;">Click on numbers to mark them. Get BINGO to win!</p>
         </div>
     </div>
     
     <script>
-        // የቴሌግራም ሚኒ አፕን በይፋ ማስነሳት
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
         
-        // ገጽታውን ከቴሌግራም ጋር ማጣጣም
         tg.setHeaderColor('#764ba2');
         tg.setBackgroundColor('#764ba2');
 
         let isGamePaid = false;
 
-        // የክፍያ አስተዳዳሪ ተግባር
         function payToPlay() {
             tg.showPopup({
                 title: 'Ozen Pay-To-Play',
-                message: 'ይህንን ዙር ለመጫወት 10 የቴሌግራም Stars መክፈል ይፈልጋሉ?',
+                message: 'ይህንን የቢንጎ ዙር ለመጫወት 10 የቴሌግራም Stars መክፈል ይፈልጋሉ?',
                 buttons: [
                     {id: 'pay', type: 'ok', text: 'አዎ ክፈል (Pay)'},
                     {id: 'cancel', type: 'cancel', text: 'ይቅር'}
@@ -406,13 +360,13 @@
                 if (buttonId === 'pay') {
                     isGamePaid = true;
                     document.getElementById('paywall').style.display = 'none';
+                    document.getElementById('gameBoard').style.display = 'table';
                     tg.HapticFeedback.notificationOccurred('success');
-                    showNotification('🎰 ክፍያዎ ተጠናቋል! ቦርዱ ክፍት ሆኗል።');
+                    showNotification('🎰 ክፍያዎ ተጠናቋል! መልካም ዕድል!');
                 }
             });
         }
 
-        // GIF መጫኑን የሚያረጋግጥ
         function gifLoaded() {
             document.getElementById('gifLoading').style.display = 'none';
             document.getElementById('bingoGif').style.display = 'block';
@@ -420,57 +374,42 @@
             document.getElementById('shareBtn').disabled = false;
         }
         
-        // GIF ስህተት ካጋጠመው ሌላ መቀየሪያ
         function gifError() {
-            document.getElementById('gifLoading').innerHTML = 'Failed to load GIF. Using fallback...';
-            const fallbackGifs = [
-                'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif',
-                'https://media.giphy.com/media/xT0xeuOy2Fcl9vDGiA/giphy.gif'
-            ];
-            document.getElementById('bingoGif').src = fallbackGifs[0];
+            document.getElementById('gifLoading').innerHTML = 'Loading fallback...';
+            document.getElementById('bingoGif').src = 'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif';
         }
         
-        // በእያንዳንዱ ሳጥን ላይ ክሊክ ሲደረግ የሚሰራ
         function clickCell(cell) {
-            if (!isGamePaid) {
-                tg.showAlert('⚠️ እባክዎን በመጀመሪያ የቴሌግራም Stars በመክፈል ቦርዱን ያግብሩ!');
-                return;
-            }
-            
+            if (!isGamePaid) return;
             cell.classList.toggle('marked');
-            tg.HapticFeedback.impactOccurred('light'); // ስልኩ ላይ ንዝረት እንዲሰማ
+            tg.HapticFeedback.impactOccurred('light');
             checkBingo();
         }
         
-        // ማሸነፍን መፈተሻ
         function checkBingo() {
-            const table = document.querySelector('.bingo-board');
+            const table = document.getElementById('gameBoard');
             const rows = table.rows;
             let win = false;
 
-            // 1. አግድም መፈተሽ (Horizontal Rows)
+            // Horizontal rows check
             for (let i = 0; i < 5; i++) {
                 let rowMarked = true;
                 for (let j = 0; j < 5; j++) {
-                    if (!rows[i].cells[j].classList.contains('marked')) {
-                        rowMarked = false;
-                    }
+                    if (!rows[i].cells[j].classList.contains('marked')) rowMarked = false;
                 }
                 if (rowMarked) win = true;
             }
 
-            // 2. በቁም መፈተሽ (Vertical Columns)
+            // Vertical columns check
             for (let j = 0; j < 5; j++) {
                 let colMarked = true;
                 for (let i = 0; i < 5; i++) {
-                    if (!rows[i].cells[j].classList.contains('marked')) {
-                        colMarked = false;
-                    }
+                    if (!rows[i].cells[j].classList.contains('marked')) colMarked = false;
                 }
                 if (colMarked) win = true;
             }
 
-            // 3. ዲያጎናል 1 መፈተሽ
+            // Diagonal 1 check
             if (rows[0].cells[0].classList.contains('marked') &&
                 rows[1].cells[1].classList.contains('marked') &&
                 rows[2].cells[2].classList.contains('marked') &&
@@ -479,7 +418,7 @@
                 win = true;
             }
 
-            // 4. ዲያጎናል 2 መፈተሽ
+            // Diagonal 2 check
             if (rows[0].cells[4].classList.contains('marked') &&
                 rows[1].cells[3].classList.contains('marked') &&
                 rows[2].cells[2].classList.contains('marked') &&
@@ -490,36 +429,26 @@
 
             if (win) {
                 tg.HapticFeedback.notificationOccurred('success');
-                tg.showAlert('🎉 BINGO! በስኬት አሸንፈዋል! የሽልማት Stars በቦታችን በኩል ይላክልዎታል።');
-                
-                const gifElement = document.getElementById('bingoGif');
-                gifElement.style.transform = 'scale(1.15)';
-                setTimeout(() => { gifElement.style.transform = 'scale(1)'; }, 600);
+                tg.showAlert('🎉 BINGO! በስኬት አሸንፈዋል! የእርሶ የሽልማት Stars ወደ አካውንትዎ ይላካል።');
                 
                 createConfetti();
-                
-                // ጨዋታውን ለቀጣይ ዙር ማዘጋጀት
-                setTimeout(() => {
-                    resetBoard();
-                }, 4000);
+                setTimeout(() => { resetBoard(); }, 5000);
             }
         }
         
         function resetBoard() {
             const cells = document.querySelectorAll('.bingo-board td');
             cells.forEach(c => {
-                if (!c.classList.contains('free-cell')) {
-                    c.classList.remove('marked');
-                }
+                if (!c.classList.contains('free-cell')) c.classList.remove('marked');
             });
             isGamePaid = false;
+            document.getElementById('gameBoard').style.display = 'none';
             document.getElementById('paywall').style.display = 'flex';
         }
 
-        // የደስታ መግለጫ (Confetti Effect)
         function createConfetti() {
             const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#00ff00', '#ffffff'];
-            for (let i = 0; i < 25; i++) {
+            for (let i = 0; i < 30; i++) {
                 const confetti = document.createElement('div');
                 confetti.style.position = 'fixed';
                 confetti.style.width = '8px';
@@ -530,21 +459,8 @@
                 confetti.style.left = Math.random() * 100 + 'vw';
                 confetti.style.zIndex = '9999';
                 confetti.style.animation = `confettiFall ${Math.random() * 2 + 1.5}s linear forwards`;
-                
                 document.body.appendChild(confetti);
                 setTimeout(() => { document.body.removeChild(confetti); }, 3500);
-            }
-            
-            if (!document.getElementById('confetti-style')) {
-                const style = document.createElement('style');
-                style.id = 'confetti-style';
-                style.textContent = `
-                    @keyframes confettiFall {
-                        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-                        100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-                    }
-                `;
-                document.head.appendChild(style);
             }
         }
         
@@ -557,42 +473,25 @@
         
         function downloadGif() {
             const gifUrl = document.getElementById('bingoGif').src;
-            tg.showPopup({
-                title: '📥 Download GIF',
-                message: 'ይህንን አኒሜሽን ማውረድ ይፈልጋሉ?',
-                buttons: [{type: 'ok', text: 'አውርድ'}]
-            }, function() {
-                const link = document.createElement('a');
-                link.href = gifUrl;
-                link.download = 'bingo-celebration.gif';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
+            window.open(gifUrl, '_blank');
+            showNotification('GIF Opened! Save to your gallery.');
         }
         
         function shareGif() {
             const gifUrl = document.getElementById('bingoGif').src;
-            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(gifUrl)}&text=Look at this cool Bingo Celebration!`);
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(gifUrl)}&text=Bingo Winner! 🎉`);
         }
 
         function shareGame() {
             tg.HapticFeedback.impactOccurred('medium');
-            const shareText = "🎯 @Bingo_lehulum_bot ላይ እውነተኛ የቢንጎ ጨዋታ ተጫውቼ አሸነፍኩ! አንተም ገብተህ ተጫወትና የቴሌግራም Stars ሸልም!";
+            const shareText = "🎯 @Bingo_lehulum_bot ላይ ቢንጎ ተጫውተህ የቴሌግራም Stars ሸልም!";
             const botLink = "https://t.me/Bingo_lehulum_bot/app";
             tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(botLink)}&text=${encodeURIComponent(shareText)}`);
         }
         
-        function addToCollection() { showNotification('🎯 Added to your collection!'); }
-        function forkGame() { showNotification('🍴 Game forked successfully!'); }
+        function addToCollection() { showNotification('🎯 Added to collection!'); }
+        function forkGame() { showNotification('🍴 Game forked!'); }
         function exportGame() { showNotification('📤 Game exported!'); }
-
-        window.addEventListener('load', function() {
-            const gif = new Image();
-            gif.onload = gifLoaded;
-            gif.onerror = gifError;
-            gif.src = document.getElementById('bingoGif').src;
-        });
     </script>
 </body>
 </html>
