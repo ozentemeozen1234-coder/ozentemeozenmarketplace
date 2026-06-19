@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Bingo Lehulum - Fixed Center Layout</title>
+    <title>Premium Bingo Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --gold: #ffd700;
-            --dark-bg: #0b0b13;
-            --card-dark: #151522;
-            --habesha-red: #ff2a2a;
+            --dark-bg: #0f0f16;
+            --card-bg: rgba(30, 30, 45, 0.7);
+            --neon-glow: 0 0 15px rgba(255, 215, 0, 0.6);
         }
 
         * {
@@ -20,400 +20,435 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        /* ቴሌግራም ላይ ጥግ እንዳይይዝ ሙሉ ስክሪኑን መሃል የሚያደርግ CSS */
-        html, body {
-            width: 100%;
-            min-height: 100vh;
+        /* ስክሪኑ ከላይ ጀምሮ በትንሹ ዝቅ እንዲል የተደረገበት አቀማመጥ */
+        body {
             background-color: var(--dark-bg);
+            color: white;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* ከላይ እንዲጀምር ያደርገዋል */
             overflow-x: hidden;
             user-select: none;
             -webkit-user-select: none;
+            padding: 15px 12px; /* ከላይ እና በጥግ በኩል ተስማሚ ክፍተት (Padding) */
         }
 
-        /* ዋናው የጌም ኮንቴነር በጥግ ከመሆን ወጥቶ ሙሉ በሙሉ መሃል ላይ እንዲሰፋ የተደረገ */
-        .app-wrapper {
-            width: 100vw;
-            max-width: 440px; /* በስልኮች ላይ ሙሉ ስክሪን እንዲሆን ያደርገዋል */
-            min-height: 100vh;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            justify-content: center;
-            align-items: stretch;
-            margin: 0 auto; /* ፍፁም ማዕከላዊ አሰላለፍ */
+        /* ገጽታ 1፦ የፊት ገጽ (Premium Dark & Gold) */
+        .premium-theme {
+            background: radial-gradient(circle at top, #231b03 0%, #0a0a0f 100%);
         }
 
-        /* ገጽታ 1፦ ፕሪሚየም የፊት ገጽ */
-        .front-premium-theme {
-            background: radial-gradient(circle, #1a1202 0%, #050508 100%);
-        }
-
-        /* ገጽታ 2፦ የጨዋታ ገጽ (ነጭ እና ጥቁር ከቀይ ክብ ጋር) */
+        /* ገጽታ 2፦ የጨዋታ ገጽ (Modern White & Black) */
         .game-active-theme {
-            background: #eef1f6 !important;
+            background: radial-gradient(circle at top, #f0f2f5 0%, #dcdde1 100%) !important;
             color: #111 !important;
         }
 
-        /* የትር መቀያየሪያዎች */
-        .nav-header-tabs {
+        /* ዋናው የቴሌግራም አፕ መያዣ ኮንቴነር */
+        .app-container {
+            width: 100%;
+            max-width: 440px; /* ለሁሉም ስልኮች ፍጹም ተስማሚ ስፋት */
             display: flex;
-            background: rgba(255, 255, 255, 0.06);
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 5px; /* ከላይኛው የስክሪን ቦታ ላይ በትንሹ ዝቅ ለማድረግ */
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             padding: 4px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
         }
 
-        .game-active-theme .nav-header-tabs {
-            background: rgba(0, 0, 0, 0.06);
+        .game-active-theme .nav-tabs {
+            background: rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
-        .tab-item {
+        .tab-btn {
             flex: 1;
-            padding: 12px;
+            padding: 11px;
             background: none;
             border: none;
             color: #aaa;
-            font-weight: 700;
+            font-weight: 600;
             font-size: 13px;
             cursor: pointer;
             border-radius: 8px;
+            transition: all 0.3s;
             text-align: center;
         }
 
-        .game-active-theme .tab-item { color: #555; }
+        .game-active-theme .tab-btn { color: #555; }
 
-        .tab-item.active {
+        .tab-btn.active {
             background: linear-gradient(135deg, #ffd700, #ffa500);
             color: #000 !important;
-            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+            box-shadow: var(--neon-glow);
         }
 
-        .app-page { display: none; width: 100%; }
-        .app-page.active { display: flex; flex-direction: column; gap: 14px; }
+        .page { display: none; width: 100%; }
+        .page.active { display: flex; flex-direction: column; gap: 15px; }
 
-        /* የተጫዋች መረጃ ማሳያ */
-        .player-status-bar {
+        /* User Profile Header */
+        .user-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 14px;
-            background: var(--card-dark);
-            border-radius: 14px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
             border: 1px solid rgba(255, 215, 0, 0.2);
             width: 100%;
         }
 
-        .game-active-theme .player-status-bar {
+        .game-active-theme .user-header {
             background: white;
             border: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        .profile-holder { display: flex; align-items: center; gap: 10px; }
-        .avatar-circle { width: 36px; height: 36px; border-radius: 50%; background: var(--gold); border: 2px solid white; display: flex; align-items: center; justify-content: center; font-weight: bold; color: black; font-size: 14px; }
-        .stars-badge { background: linear-gradient(135deg, #ffd700, #ffa500); color: black; padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 12px; }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--gold); border: 2px solid white; display: flex; align-items: center; justify-content: center; font-weight: bold; color: black; }
+        .username { font-weight: 700; font-size: 15px; }
+        .balance-badge { background: linear-gradient(135deg, #ffd700, #ffa500); color: black; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 13px; }
 
-        /* የመሃል ክብ ቢንጎ ማሽከርከሪያ (Tombola) አኒሜሽን */
-        .center-spin-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 18px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        /* GIF Section */
+        .gif-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
+            width: 100%;
+        }
+
+        .game-active-theme .gif-card {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .gif-frame {
+            width: 100%;
+            height: 160px;
+            background: #000;
+            border-radius: 12px;
+            margin: 10px 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gif-frame img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        /* Paywall Area */
+        .paywall-box {
+            background: linear-gradient(135deg, #1e1e2f 0%, #0f0f1a 100%);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            border: 2px solid var(--gold);
+            box-shadow: var(--neon-glow);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            gap: 15px;
             width: 100%;
         }
 
-        .tombola-wheel {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            border: 6px dashed var(--gold);
-            margin: 15px 0;
+        .paywall-box h2 { color: var(--gold); font-size: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .paywall-box p { color: #ccc; font-size: 13px; line-height: 1.5; }
+
+        /* Mode Selectors (Auto / Manual) */
+        .mode-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 42px;
-            background: radial-gradient(circle, #251c05 0%, #000 100%);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.35);
-            animation: rotateWheel 6s linear infinite;
-        }
-
-        @keyframes rotateWheel {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Play 10 Stars መግቢያ ቦክስ */
-        .habesha-paywall {
-            background: linear-gradient(135deg, #151522 0%, #07070d 100%);
-            border-radius: 18px;
-            padding: 24px 20px;
-            text-align: center;
-            border: 2px solid var(--gold);
-            box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
-            width: 100%;
-        }
-
-        .engine-toggle-row {
-            display: flex;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px;
             border-radius: 10px;
-            margin: 15px 0;
             width: 100%;
+            margin-top: 10px;
         }
 
-        .engine-btn {
+        .mode-btn {
             flex: 1;
-            padding: 10px;
+            padding: 9px;
             background: none;
             border: none;
-            color: #666;
+            color: #777;
             font-weight: bold;
-            font-size: 13px;
             cursor: pointer;
-            border-radius: 7px;
+            border-radius: 6px;
         }
 
-        .engine-btn.active {
-            background: white;
-            color: black;
+        .mode-btn.active {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* 1-90 የሀበሻ ቢንጎ ሰሌዳ (Horizontal Grid) */
-        .habesha-board-box {
+        /* Bingo Board (White & Black) */
+        .board-container {
             background: white;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             display: none;
             width: 100%;
         }
 
-        .grid-90-layout {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr); /* 10 ቁጥሮች በአግድም በአንድ መስመር */
-            gap: 5px;
+        .bingo-table {
             width: 100%;
+            border-collapse: separate;
+            border-spacing: 6px;
         }
 
-        .grid-90-layout div {
-            background: #f1f3f5;
+        .bingo-table td {
+            width: 20%;
+            height: 55px;
+            text-align: center;
+            background: #f8f9fa;
             color: #222;
-            font-size: 13px;
-            font-weight: 800;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            border: 1px solid #cbd5e1;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
-        /* ሲመረጥ ደማቅ ቀይ ክብ የሚሆን ማርከር */
-        .grid-90-layout div.marked {
-            background: linear-gradient(135deg, #ff1a1a, #cc0000) !important;
+        .bingo-table td:hover { background: #e2e6ea; }
+
+        .bingo-table td.marked {
+            background: linear-gradient(135deg, #111111, #333333) !important;
             color: white !important;
-            border-color: #ff1a1a !important;
-            border-radius: 50%;
-            transform: scale(0.92);
-            box-shadow: 0 2px 5px rgba(255, 26, 26, 0.4);
+            border-color: #111 !important;
+            transform: scale(0.95);
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.3);
         }
 
-        /* ዋና ቁልፎች */
-        .main-action-button {
+        .bingo-table td.free-cell {
+            background: linear-gradient(135deg, #ffd700, #ffa500) !important;
+            color: black !important;
+            border-color: #ffa500 !important;
+        }
+
+        /* Action Buttons */
+        .btn-prime {
             background: linear-gradient(135deg, #ffd700, #ffa500);
             color: black;
             border: none;
-            padding: 15px 20px;
+            padding: 14px 28px;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             border-radius: 12px;
             cursor: pointer;
             width: 100%;
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            transition: transform 0.2s;
         }
 
-        .secondary-action-button {
-            background: rgba(255, 255, 255, 0.06);
+        .btn-prime:active { transform: scale(0.98); }
+
+        .btn-sec {
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 10px 15px;
             font-weight: 600;
             font-size: 13px;
             border-radius: 10px;
             cursor: pointer;
+            flex: 1;
         }
 
-        .game-active-theme .secondary-action-button {
-            background: #cbd5e1;
+        .game-active-theme .btn-sec {
+            background: #f1f2f6;
             color: #333;
-            border: 1px solid #94a3b8;
+            border: 1px solid #ccc;
         }
 
-        /* የሪዋርድ ገፅ ሳጥን */
-        .reward-card-box {
-            background: var(--card-dark);
+        /* Referral System Styling */
+        .share-status-card {
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
         }
 
-        .bar-container {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 8px;
-            height: 8px;
+        .progress-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            height: 12px;
             width: 100%;
             margin: 10px 0;
             overflow: hidden;
         }
 
-        .bar-fill {
+        .progress-bar {
             background: linear-gradient(90deg, #ffd700, #ffa500);
             height: 100%;
             width: 0%;
-            transition: width 0.3s;
+            transition: width 0.5s ease;
         }
 
-        .milestone-text {
+        .milestones {
             display: flex;
             justify-content: space-between;
             font-size: 11px;
-            color: #999;
+            color: #aaa;
         }
 
-        .history-card-item {
+        /* AI Guide & History List */
+        .ai-guide-box {
+            background: rgba(255, 215, 0, 0.05);
+            border-left: 4px solid var(--gold);
+            padding: 12px;
+            border-radius: 4px 12px 12px 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+
+        .history-item {
             display: flex;
             justify-content: space-between;
-            padding: 9px;
-            background: rgba(255,255,255,0.02);
+            padding: 10px 12px;
+            background: rgba(255,255,255,0.03);
             border-radius: 8px;
-            font-size: 12px;
-            margin-bottom: 5px;
+            font-size: 13px;
+            margin-bottom: 6px;
         }
 
-        .toast-popup {
+        .history-win { color: #4cd137; font-weight: bold; }
+        .history-loss { color: #e84118; font-weight: bold; }
+
+        /* Notifications */
+        .toast {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: #000;
+            background: rgba(0, 0, 0, 0.9);
             color: var(--gold);
-            padding: 9px 18px;
-            border-radius: 25px;
-            font-size: 12px;
-            z-index: 20000;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            z-index: 10000;
             display: none;
             border: 1px solid var(--gold);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
     </style>
 </head>
-<body class="front-premium-theme" id="layoutWrapper">
+<body class="premium-theme" id="bodyWrapper">
 
-    <div class="toast-popup" id="toastAlert"></div>
+    <div class="toast" id="toastMessage"></div>
 
-    <div class="app-wrapper">
-        <div class="nav-header-tabs">
-            <button class="tab-item active" onclick="changeAppTab('play-page')">🎮 ቢንጎ መጫወቻ</button>
-            <button class="tab-item" onclick="changeAppTab('gift-page')">🎁 የሼር ሪዋርድ</button>
-            <button class="tab-item" onclick="changeAppTab('info-page')">💡 AI መመሪያ</button>
+    <div class="app-container">
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('game-tab')">🎮 Play</button>
+            <button class="tab-btn" onclick="switchTab('share-tab')">🎁 Rewards</button>
+            <button class="tab-btn" onclick="switchTab('info-tab')">💡 AI Guide & History</button>
         </div>
 
-        <div class="player-status-bar">
-            <div class="profile-holder">
-                <div class="avatar-circle" id="userInitial">B</div>
+        <div class="user-header">
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">U</div>
                 <div>
-                    <div style="font-weight:700; font-size:14px;" id="tgAccountName">የቢንጎ ተጫዋች</div>
-                    <div style="font-size:11px; color:#777;" id="ticketCounter">Free Tickets: 0</div>
+                    <div class="username" id="userNameLabel">Player Telegram</div>
+                    <div style="font-size: 11px; color: #888;" id="userStatus">Free Tickets: 0</div>
                 </div>
             </div>
-            <div class="stars-badge">⭐ <span id="starsTokenVal">150</span> Stars</div>
+            <div class="balance-badge">⭐ <span id="starBalance">100</span> Stars</div>
         </div>
 
-        <div id="play-page" class="app-page active">
-            <div class="center-spin-card">
-                <div style="font-size:12px; font-weight:bold; color:var(--gold);">BINGO LEHULUM TOMBOLA</div>
-                <div class="tombola-wheel" id="wheelObject">🎰</div>
-                <div style="font-size:11px; color:#888;">ዕድልዎን በStars ይሞክሩ!</div>
+        <div id="game-tab" class="page active">
+            <div class="gif-card">
+                <div style="font-size: 14px; font-weight: bold;">🎉 Bingo Celebration Animation</div>
+                <div class="gif-frame">
+                    <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY2Z3I4Z3I5bXo1M3VxdHptbWN3ZzRkbW5pYnZ4ZTh6NTV6eThmZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/80ndgXvUe2vM4/giphy.gif" alt="Bingo Celebration">
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-sec" onclick="shareToTelegram()">Share GIF 📱</button>
+                </div>
             </div>
 
-            <div class="habesha-paywall" id="paywallContainer">
-                <h3 style="color:var(--gold); font-size:18px;">የሀበሻ ቢንጎ ዙር</h3>
-                <p style="font-size:12px; color:#aaa; margin-top:4px;">ለመጀመር 10 Stars ይክፈሉ ወይም የነፃ ቲኬትዎን ይጠቀሙ።</p>
+            <div class="paywall-box" id="paywallArea">
+                <h2>⭐ Premium Entry</h2>
+                <p>ይህንን ዙር ለመጀመር 10 የቴሌግራም Stars መክፈል ያስፈልጋል። ሲያሸንፉ የዕጥፍ ዕጥፍ ይሸለማሉ!</p>
                 
-                <div class="engine-toggle-row">
-                    <button class="engine-btn active" id="modeMan" onclick="toggleEngine('manual')">Manual</button>
-                    <button class="engine-btn" id="modeAu" onclick="toggleEngine('auto')">Auto Play (AI)</button>
+                <div class="mode-container">
+                    <button class="mode-btn active" id="modeManual" onclick="setMode('manual')">Manual Play</button>
+                    <button class="mode-btn" id="modeAuto" onclick="setMode('auto')">Auto Play (AI)</button>
                 </div>
 
-                <button class="main-action-button" onclick="startPremiumRound()">Play 10 Stars ⭐</button>
+                <button class="btn-prime" onclick="processPremiumPayment()">Pay 10 Stars ⭐</button>
             </div>
 
-            <div class="habesha-board-box" id="habeshaBoard">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #e2e8f0; padding-bottom:6px;">
-                    <span style="font-weight:800; font-size:13px;" id="liveInGameUser">Player: Unknown</span>
-                    <span id="engineTextBadge" style="font-size:11px; background:var(--habesha-red); color:white; padding:2px 7px; border-radius:4px; font-weight:bold;">Manual</span>
+            <div class="board-container" id="boardWrapperBox">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="font-weight: bold; font-size: 14px;">🎯 Match numbers to win!</span>
+                    <span id="gameModeIndicator" style="font-size: 12px; background: #222; color: #fff; padding: 3px 8px; border-radius: 5px;">Manual</span>
                 </div>
-
-                <div class="grid-90-layout" id="habeshaGrid90"></div>
-
-                <div style="margin-top:12px; display:flex; gap:8px;">
-                    <button class="secondary-action-button" style="background:var(--habesha-red); color:white; border:none; flex:1;" onclick="exitCurrentGame()">ከጨዋታው ውጣ 🏳️</button>
+                <table class="bingo-table" id="bingoGrid"></table>
+                <div style="margin-top: 15px; display: flex; gap: 8px;">
+                    <button class="btn-sec" style="background:#e84118; color:white; border:none;" onclick="forfeitMatch()">Quit Round</button>
                 </div>
             </div>
         </div>
 
-        <div id="gift-page" class="app-page">
-            <div class="reward-card-box">
-                <h3>🎁 የሪፈራል ነፃ ቲኬት</h3>
-                <p style="font-size:13px; color:#ccc; margin-top:5px;">ለ20 ሰው ሲያጋሩ 1 ጨዋታ፣ ለ40 ሰው 2 ጨዋታ፣ ለ100 ሰው 5 ጨዋታ በነፃ ይሸለማሉ!</p>
+        <div id="share-tab" class="page">
+            <div class="share-status-card">
+                <h3>🎁 Invite Friends Reward</h3>
+                <p style="font-size: 13px; color: #ccc; margin-top: 5px;">ጨዋታውን ለጓደኞችዎ በቴሌግራም በማጋራት ነፃ የቢንጎ መጫወቻ ቲኬቶችን በነፃ ይውሰዱ!</p>
                 
-                <div style="margin-top:15px; font-weight:bold; font-size:13px;">
-                    የሼር ብዛት: <span id="shareCountLabel" style="color:var(--gold);">0</span> / 100
+                <div style="margin-top: 15px; font-weight: bold; font-size: 14px;">
+                    စုቅል የተደረገ የሼር ብዛት: <span id="totalSharesCount" style="color:var(--gold);">0</span> / 100
                 </div>
 
-                <div class="bar-container">
-                    <div class="bar-fill" id="barFillObj"></div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="shareProgressBar"></div>
                 </div>
 
-                <div class="milestone-text">
-                    <span>20 Shares (1)</span>
-                    <span>40 Shares (2)</span>
-                    <span>100 Shares (5)</span>
+                <div class="milestones">
+                    <span>20 Shares (1 tkt)</span>
+                    <span>40 (2 tkts)</span>
+                    <span>100 (5 tkts)</span>
                 </div>
 
-                <button class="main-action-button" style="margin-top:15px;" onclick="sendTelegramInvite()">ለ20 ሰው ሼር አድርግ 📱</button>
+                <button class="btn-prime" style="margin-top: 20px;" onclick="triggerReferralShare()">Invite/Share Now 📱</button>
             </div>
         </div>
 
-        <div id="info-page" class="app-page">
-            <div class="reward-card-box">
-                <h3>💡 የ Stars አጠቃቀም የ AI መመሪያ</h3>
-                <div style="font-size:13px; line-height:1.6; color:#ddd; margin-top:8px; display:flex; flex-direction:column; gap:6px;">
-                    <p><strong>1. ስታርስ እንዴት ይገዛል?</strong><br>በቴሌግราม ውስጥ የባንክ ካርድ በመጠቀም Stars በቀላሉ መግዛት ይቻላል slums።</p>
-                    <p><strong>2. የክፍያ አፈፃፀም፦</strong><br>"Play 10 Stars" ሲጫኑ የቴሌግራም ሲስተም ክፍያውን ያረጋግጣል።</p>
+        <div id="info-tab" class="page">
+            <div class="share-status-card">
+                <h3>💡 የ AI ትምህርት መመሪያ (How to Buy Stars)</h3>
+                <div class="ai-guide-box" style="margin-top: 10px;">
+                    <strong>1. Stars እንዴት ይገዛል?</strong><br>
+                    በቴሌግራም ውስጥ በቀጥታ በቪዛ (Visa) ወይም በ ፍራንክ የባንክ አካውንት በመጠቀም የቴሌግራም Stars መግዛት ይችላሉ።<br><br>
+                    <strong>2. የክፍያ ሂደት፦</strong><br>
+                    "Pay 10 Stars" የሚለውን ሲጫኑ የቴሌግራም ኦፊሴላዊ የክፍያ ቦክስ ይመጣል። ክፍያውን ሲያጠናቅቁ ቦርዱ ይከፈታል።<br><br>
+                    <strong>3. ማውጣት (Withdrawal)፦</strong><br>
+                    ያሸነፉትን የStars መጠን በቴሌግራም Fragment በኩል ወደ እውነተኛ ገንዘብ መቀየር ወይም ለሌላ ጨዋታ መጠቀም ይችላሉ።
                 </div>
             </div>
 
-            <div class="reward-card-box">
-                <h3>📜 የጨዋታ ታሪክ (History)</h3>
-                <div id="historyLogArea" style="margin-top:8px;">
-                    <div class="history-card-item"><span>Round #1240</span><span style="color:#4cd137; font-weight:bold;">+35 Stars Won</span></div>
+            <div class="share-status-card">
+                <h3>📜 የጨዋታ ታሪክ (Match History)</h3>
+                <div id="historyLogContainer" style="margin-top: 10px; display:flex; flex-direction:column; gap:5px;">
+                    <div class="history-item"><span>Round #1024 (Paid 10 Stars)</span><span class="history-win">+20 Stars Won</span></div>
+                    <div class="history-item"><span>Round #1021 (Paid 10 Stars)</span><span class="history-loss">Lost</span></div>
                 </div>
             </div>
         </div>
+
     </div>
 
     <script>
@@ -421,165 +456,205 @@
         tg.ready();
         tg.expand();
 
-        let gameEngine = 'manual';
-        let currentShares = 0;
-        let earnedTickets = 0;
-        let starTokens = 150;
-        let autoIntervalEngine = null;
-        let currentTgUser = "የቢንጎ ተጫዋች";
+        let currentMode = 'manual';
+        let userShares = 0;
+        let freeTickets = 0;
+        let starBalance = 120;
+        let autoPlayInterval = null;
 
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            const u = tg.initDataUnsafe.user;
-            currentTgUser = (u.first_name + ' ' + (u.last_name || '')).trim();
-            document.getElementById('tgAccountName').textContent = currentTgUser;
-            document.getElementById('liveInGameUser').textContent = "Player: " + currentTgUser;
-            document.getElementById('userInitial').textContent = u.first_name.charAt(0).toUpperCase();
+            const user = tg.initDataUnsafe.user;
+            document.getElementById('userNameLabel').textContent = (user.first_name + ' ' + (user.last_name || '')).trim();
+            document.getElementById('userAvatar').textContent = user.first_name.charAt(0).toUpperCase();
         }
 
-        function changeAppTab(pageId) {
-            document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
+        function switchTab(tabId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
             tg.HapticFeedback.impactOccurred('light');
         }
 
-        function toggleEngine(mode) {
-            gameEngine = mode;
-            document.getElementById('modeMan').classList.toggle('active', mode === 'manual');
-            document.getElementById('modeAu').classList.toggle('active', mode === 'auto');
-            document.getElementById('engineTextBadge').textContent = mode === 'manual' ? 'Manual' : 'Auto Play (AI)';
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('modeManual').classList.toggle('active', mode === 'manual');
+            document.getElementById('modeAuto').classList.toggle('active', mode === 'auto');
+            document.getElementById('gameModeIndicator').textContent = mode === 'manual' ? 'Manual' : 'Auto Play (AI)';
             tg.HapticFeedback.impactOccurred('light');
         }
 
-        function showToastMessage(msg) {
-            const t = document.getElementById('toastAlert');
-            t.textContent = msg;
-            t.style.display = 'block';
-            setTimeout(() => { t.style.display = 'none'; }, 2500);
+        function showToast(msg) {
+            const toast = document.getElementById('toastMessage');
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
 
-        function startPremiumRound() {
-            if (starTokens < 10 && earnedTickets <= 0) {
+        function processPremiumPayment() {
+            if (starBalance < 10 && freeTickets <= 0) {
                 tg.showAlert('⚠️ በቂ Stars የለዎትም! እባክዎ መጀመሪያ Stars ይግዙ።');
                 return;
             }
 
             tg.showPopup({
-                title: 'የሀበሻ ቢንጎ መጫወቻ',
-                message: earnedTickets > 0 ? 'ከነፃ ቲኬትዎ ላይ 1 ቀንሰው መጫወት ይፈልጋሉ?' : 'ይህንን ዙር ለመጀመር 10 Stars መክፈል ይፈልጋሉ?',
+                title: 'Confirm Ticket Entry',
+                message: freeTickets > 0 ? 'ካለዎት ነፃ የጨዋታ ቲኬት ላይ 1 ተቀንሶ መጫወት ይፈልጋሉ?' : 'ይህንን ጨዋታ ለመጀመር 10 Stars መክፈል ይፈልጋሉ?',
                 buttons: [
                     {id: 'yes', type: 'ok', text: 'አዎ ጀምር'},
                     {id: 'no', type: 'cancel', text: 'ይቅር'}
                 ]
             }, function(btnId) {
                 if (btnId === 'yes') {
-                    if (earnedTickets > 0) {
-                        earnedTickets--;
-                        document.getElementById('ticketCounter').textContent = `Free Tickets: ${earnedTickets}`;
+                    if (freeTickets > 0) {
+                        freeTickets--;
+                        document.getElementById('userStatus').textContent = `Free Tickets: ${freeTickets}`;
                     } else {
-                        starTokens -= 10;
-                        document.getElementById('starsTokenVal').textContent = starTokens;
+                        starBalance -= 10;
+                        document.getElementById('starBalance').textContent = starBalance;
                     }
-                    generateHabesha90Grid();
+                    launchBingoMatch();
                 }
             });
         }
 
-        function generateHabesha90Grid() {
+        function launchBingoMatch() {
             tg.HapticFeedback.notificationOccurred('success');
-            document.getElementById('layoutWrapper').className = "game-active-theme";
-            document.getElementById('paywallContainer').style.display = 'none';
-            document.getElementById('habeshaBoard').style.display = 'block';
+            
+            document.getElementById('bodyWrapper').className = "game-active-theme";
+            document.getElementById('paywallArea').style.display = 'none';
+            document.getElementById('boardWrapperBox').style.display = 'block';
 
-            const container = document.getElementById('habeshaGrid90');
-            container.innerHTML = '';
-
-            for (let i = 1; i <= 90; i++) {
-                const numBox = document.createElement('div');
-                numBox.textContent = i;
-                numBox.onclick = function() { markHabeshaNumber(this); };
-                container.appendChild(numBox);
+            const grid = document.getElementById('bingoGrid');
+            grid.innerHTML = '';
+            
+            let numbers = [];
+            while(numbers.length < 24) {
+                let r = Math.floor(Math.random() * 75) + 1;
+                if(numbers.indexOf(r) === -1) numbers.push(r);
             }
 
-            if (gameEngine === 'auto') {
-                runAIAutomation();
-            }
-        }
-
-        function markHabeshaNumber(element) {
-            if (element.classList.contains('marked')) return;
-            element.classList.add('marked');
-            tg.HapticFeedback.impactOccurred('light');
-            checkWinningStatus();
-        }
-
-        function runAIAutomation() {
-            showToastMessage("🤖 AI Auto Play ተጀምሯል!");
-            autoIntervalEngine = setInterval(() => {
-                const unMarked = Array.from(document.querySelectorAll('.grid-90-layout div:not(.marked)'));
-                if (unMarked.length > 0) {
-                    const pick = unMarked[Math.floor(Math.random() * unMarked.length)];
-                    pick.classList.add('marked');
-                    tg.HapticFeedback.impactOccurred('light');
-                    checkWinningStatus();
-                } else {
-                    clearInterval(autoIntervalEngine);
+            let numIdx = 0;
+            for (let r = 0; r < 5; r++) {
+                let row = document.createElement('tr');
+                for (let c = 0; c < 5; c++) {
+                    let cell = document.createElement('td');
+                    if (r === 2 && c === 2) {
+                        cell.textContent = 'FREE';
+                        cell.className = 'free-cell marked';
+                    } else {
+                        cell.textContent = numbers[numIdx++];
+                        cell.onclick = function() { clickCell(this); };
+                    }
+                    row.appendChild(cell);
                 }
-            }, 800);
-        }
+                grid.appendChild(row);
+            }
 
-        function checkWinningStatus() {
-            const markedCells = document.querySelectorAll('.grid-90-layout div.marked').length;
-            if (markedCells >= 15) {
-                if (autoIntervalEngine) clearInterval(autoIntervalEngine);
-                triggerWinPayout();
+            if (currentMode === 'auto') {
+                runAIAutoPlay();
             }
         }
 
-        function triggerWinPayout() {
+        function clickCell(cell) {
+            if (cell.classList.contains('marked')) return;
+            cell.classList.add('marked');
+            tg.HapticFeedback.impactOccurred('light');
+            verifyBingoWin();
+        }
+
+        function runAIAutoPlay() {
+            showToast("🤖 AI Auto-Play ተጀምሯል...");
+            autoPlayInterval = setInterval(() => {
+                const unMarkedCells = Array.from(document.querySelectorAll('#bingoGrid td:not(.marked)'));
+                if (unMarkedCells.length > 0) {
+                    const randomCell = unMarkedCells[Math.floor(Math.random() * unMarkedCells.length)];
+                    randomCell.classList.add('marked');
+                    tg.HapticFeedback.impactOccurred('light');
+                    verifyBingoWin();
+                } else {
+                    clearInterval(autoPlayInterval);
+                }
+            }, 1200);
+        }
+
+        function verifyBingoWin() {
+            const rows = document.querySelectorAll('#bingoGrid tr');
+            if (rows.length === 0) return;
+            
+            let won = false;
+
+            rows.forEach(row => {
+                let cells = row.querySelectorAll('td');
+                if (Array.from(cells).every(c => c.classList.contains('marked'))) won = true;
+            });
+
+            for (let c = 0; c < 5; c++) {
+                let colMarked = true;
+                for (let r = 0; r < 5; r++) {
+                    if (!rows[r].querySelectorAll('td')[c].classList.contains('marked')) colMarked = false;
+                }
+                if (colMarked) won = true;
+            }
+
+            if (won) {
+                if (autoPlayInterval) clearInterval(autoPlayInterval);
+                executeWinSensation();
+            }
+        }
+
+        // Win Sensation
+        function executeWinSensation() {
             tg.HapticFeedback.notificationOccurred('success');
-            starTokens += 35;
-            document.getElementById('starsTokenVal').textContent = starTokens;
+            starBalance += 30;
+            document.getElementById('starBalance').textContent = starBalance;
+            
+            const container = document.getElementById('historyLogContainer');
+            const log = document.createElement('div');
+            log.className = 'history-item';
+            log.innerHTML = `<span>Round #${Math.floor(Math.random() * 9000) + 1000}</span><span class="history-win">+30 Stars Won</span>`;
+            container.insertBefore(log, container.firstChild);
 
-            const area = document.getElementById('historyLogArea');
-            const r = document.createElement('div');
-            r.className = 'history-card-item';
-            r.innerHTML = `<span>Round #${Math.floor(Math.random()*8000)+1000}</span><span style="color:#4cd137; font-weight:bold;">+35 Stars Won</span>`;
-            area.insertBefore(r, area.firstChild);
-
-            tg.showAlert('🎉 ቢንጎ! በስኬት አሸንፈዋል! 35 Stars ገቢ ሆኗል።');
-            restoreLayoutToFront();
+            tg.showAlert('🎉 BINGO! እጅግ በጣም ግሩም ጨዋታ! 30 Stars በስኬት አሸንፈዋል!');
+            cleanupMatchUI();
         }
 
-        function exitCurrentGame() {
-            if (autoIntervalEngine) clearInterval(autoIntervalEngine);
-            showToastMessage("🏳️ ጨዋታውን አቋርጠዋል።");
-            restoreLayoutToFront();
+        function forfeitMatch() {
+            if (autoPlayInterval) clearInterval(autoPlayInterval);
+            showToast("🏳️ ከጨዋታው ወጥተዋል!");
+            cleanupMatchUI();
         }
 
-        function restoreLayoutToFront() {
-            document.getElementById('layoutWrapper').className = "front-premium-theme";
-            document.getElementById('paywallContainer').style.display = 'block';
-            document.getElementById('habeshaBoard').style.display = 'none';
+        function cleanupMatchUI() {
+            document.getElementById('bodyWrapper').className = "premium-theme";
+            document.getElementById('paywallArea').style.display = 'flex';
+            document.getElementById('boardWrapperBox').style.display = 'none';
         }
 
-        function sendTelegramInvite() {
-            currentShares += 20;
-            if (currentShares > 100) currentShares = 100;
+        function triggerReferralShare() {
+            userShares += 20;
+            if (userShares > 100) userShares = 100;
 
-            document.getElementById('shareCountLabel').textContent = currentShares;
-            document.getElementById('barFillObj').style.width = currentShares + '%';
+            document.getElementById('totalSharesCount').textContent = userShares;
+            
+            const progress = document.getElementById('shareProgressBar');
+            progress.style.width = userShares + '%';
 
-            if (currentShares === 20) { earnedTickets += 1; }
-            else if (currentShares === 40) { earnedTickets += 2; }
-            else if (currentShares === 100) { earnedTickets += 5; }
+            if (userShares === 20) { freeTickets = 1; showToast("🎁 20 ሰዎችን ስለጋበዙ 1 ነፃ ጨዋታ ተሸልመዋል!"); }
+            else if (userShares === 40) { freeTickets = 2; showToast("🎁 40 ሰዎችን ስለጋበዙ 2 ነፃ ጨዋታ ተሸልመዋል!"); }
+            else if (userShares === 100) { freeTickets = 5; showToast("🎁 100 ሰዎችን ስለጋበዙ 5 ነፃ ጨዋታ ተሸልመዋል!"); }
+            
+            document.getElementById('userStatus').textContent = `Free Tickets: ${freeTickets}`;
 
-            document.getElementById('ticketCounter').textContent = `Free Tickets: ${earnedTickets}`;
+            const shareText = "🎯 ድንቅ የቢንጎ ጨዋታ በቴሌግራም Stars ሽልማት ጋር! ተጫውተህ አሸንፍ!";
+            const botLink = "https://t.me/Bingo_lehulum_bot/app";
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(botLink)}&text=${encodeURIComponent(shareText)}`);
+        }
 
-            const t = "🎯 @Bingo_lehulum_bot ላይ እውነተኛውን የሀበሻ ቢንጎ ተጫውተው የቴሌግራም Stars ይሸለሙ!";
-            const l = "https://t.me/Bingo_lehulum_bot/app";
-            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(l)}&text=${encodeURIComponent(t)}`);
+        function shareToTelegram() {
+            const gifUrl = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY2Z3I4Z3I5bXo1M3VxdHptbWN3ZzRkbW5pYnZ4ZTh6NTV6eThmZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/80ndgXvUe2vM4/giphy.gif";
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(gifUrl)}&text=I%20am%20playing%20Bingo!%20🎯`);
         }
     </script>
 </body>
