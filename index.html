@@ -13,6 +13,7 @@
             --neon-glow: 0 0 15px rgba(255, 215, 0, 0.6);
         }
 
+        /* ሁሉንም ነገር በቦክስ ሞዴል መቆጣጠር */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -20,39 +21,37 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        /* ስክሪኑ ከላይ ጀምሮ በትንሹ ዝቅ እንዲል የተደረገበት አቀማመጥ */
-        body {
+        /* በስክሪንሾቱ 1000017795.jpg ላይ ያለውን የግራ መቆረጥ ለማስተካከል flex ተወግዷል */
+        html, body {
+            width: 100%;
+            min-height: 100vh;
             background-color: var(--dark-bg);
             color: white;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* ከላይ እንዲጀምር ያደርገዋል */
             overflow-x: hidden;
             user-select: none;
             -webkit-user-select: none;
-            padding: 15px 12px; /* ከላይ እና በጥግ በኩል ተስማሚ ክፍተት (Padding) */
         }
 
-        /* ገጽታ 1፦ የፊት ገጽ (Premium Dark & Gold) */
+        /* ገጽታ 1፦ የፊት ገጽ */
         .premium-theme {
             background: radial-gradient(circle at top, #231b03 0%, #0a0a0f 100%);
         }
 
-        /* ገጽታ 2፦ የጨዋታ ገጽ (Modern White & Black) */
+        /* ገጽታ 2፦ የጨዋታ ገጽ */
         .game-active-theme {
             background: radial-gradient(circle at top, #f0f2f5 0%, #dcdde1 100%) !important;
             color: #111 !important;
         }
 
-        /* ዋናው የቴሌግራም አፕ መያዣ ኮንቴነር */
+        /* ዋናው ኮንቴነር በጥግ እንዳይቆረጥ መሃል ላይ በብሎክ እንዲቀመጥ ተደረገ */
         .app-container {
             width: 100%;
-            max-width: 440px; /* ለሁሉም ስልኮች ፍጹም ተስማሚ ስፋት */
+            max-width: 450px;
+            margin: 0 auto; /* ፍፁም ማዕከላዊ አሰላለፍ */
+            padding: 16px 12px;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-top: 5px; /* ከላይኛው የስክሪን ቦታ ላይ በትንሹ ዝቅ ለማድረግ */
         }
 
         /* Navigation Tabs */
@@ -80,7 +79,6 @@
             font-size: 13px;
             cursor: pointer;
             border-radius: 8px;
-            transition: all 0.3s;
             text-align: center;
         }
 
@@ -118,7 +116,7 @@
         .username { font-weight: 700; font-size: 15px; }
         .balance-badge { background: linear-gradient(135deg, #ffd700, #ffa500); color: black; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 13px; }
 
-        /* GIF Section */
+        /* የጂአይኤፍ ስህተትን ለመፍታት የተሰራ ቋሚ ቆንጆ CSS አኒሜሽን ቦክስ */
         .gif-card {
             background: var(--card-bg);
             border-radius: 20px;
@@ -135,23 +133,41 @@
 
         .gif-frame {
             width: 100%;
-            height: 160px;
-            background: #000;
+            height: 140px;
+            background: linear-gradient(45deg, #1e112a, #0b071e);
             border-radius: 12px;
             margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
             overflow: hidden;
+            border: 1px dashed var(--gold);
+        }
+
+        .glow-circle {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+            animation: pulseGlow 2s infinite ease-in-out;
+            font-size: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .gif-frame img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        @keyframes pulseGlow {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
 
         /* Paywall Area */
         .paywall-box {
             background: linear-gradient(135deg, #1e1e2f 0%, #0f0f1a 100%);
             border-radius: 20px;
-            padding: 30px 20px;
+            padding: 25px 20px;
             text-align: center;
             border: 2px solid var(--gold);
             box-shadow: var(--neon-glow);
@@ -172,12 +188,12 @@
             padding: 5px;
             border-radius: 10px;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .mode-btn {
             flex: 1;
-            padding: 9px;
+            padding: 10px;
             background: none;
             border: none;
             color: #777;
@@ -210,7 +226,7 @@
 
         .bingo-table td {
             width: 20%;
-            height: 55px;
+            height: 52px;
             text-align: center;
             background: #f8f9fa;
             color: #222;
@@ -219,17 +235,13 @@
             border-radius: 10px;
             border: 2px solid #e9ecef;
             cursor: pointer;
-            transition: all 0.2s;
         }
-
-        .bingo-table td:hover { background: #e2e6ea; }
 
         .bingo-table td.marked {
             background: linear-gradient(135deg, #111111, #333333) !important;
             color: white !important;
             border-color: #111 !important;
             transform: scale(0.95);
-            box-shadow: inset 0 3px 5px rgba(0,0,0,0.3);
         }
 
         .bingo-table td.free-cell {
@@ -238,7 +250,7 @@
             border-color: #ffa500 !important;
         }
 
-        /* Action Buttons */
+        /* Buttons */
         .btn-prime {
             background: linear-gradient(135deg, #ffd700, #ffa500);
             color: black;
@@ -250,16 +262,13 @@
             cursor: pointer;
             width: 100%;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-            transition: transform 0.2s;
         }
-
-        .btn-prime:active { transform: scale(0.98); }
 
         .btn-sec {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 15px;
+            padding: 11px 15px;
             font-weight: 600;
             font-size: 13px;
             border-radius: 10px;
@@ -273,7 +282,6 @@
             border: 1px solid #ccc;
         }
 
-        /* Referral System Styling */
         .share-status-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
@@ -305,7 +313,6 @@
             color: #aaa;
         }
 
-        /* AI Guide & History List */
         .ai-guide-box {
             background: rgba(255, 215, 0, 0.05);
             border-left: 4px solid var(--gold);
@@ -329,7 +336,6 @@
         .history-win { color: #4cd137; font-weight: bold; }
         .history-loss { color: #e84118; font-weight: bold; }
 
-        /* Notifications */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -343,7 +349,6 @@
             z-index: 10000;
             display: none;
             border: 1px solid var(--gold);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
     </style>
 </head>
@@ -362,7 +367,7 @@
             <div class="user-info">
                 <div class="avatar" id="userAvatar">U</div>
                 <div>
-                    <div class="username" id="userNameLabel">Player Telegram</div>
+                    <div class="username" id="userNameLabel">የቢንጎ ተጫዋች</div>
                     <div style="font-size: 11px; color: #888;" id="userStatus">Free Tickets: 0</div>
                 </div>
             </div>
@@ -371,12 +376,13 @@
 
         <div id="game-tab" class="page active">
             <div class="gif-card">
-                <div style="font-size: 14px; font-weight: bold;">🎉 Bingo Celebration Animation</div>
+                <div style="font-size: 14px; font-weight: bold; color: var(--gold);">🎉 Bingo Live Match Room</div>
                 <div class="gif-frame">
-                    <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY2Z3I4Z3I5bXo1M3VxdHptbWN3ZzRkbW5pYnZ4ZTh6NTV6eThmZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/80ndgXvUe2vM4/giphy.gif" alt="Bingo Celebration">
+                    <div class="glow-circle">🎯</div>
+                    <div style="font-size: 12px; margin-top:8px; color:#aaa;">ይጫወቱ፣ ያሸንፉ!</div>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                    <button class="btn-sec" onclick="shareToTelegram()">Share GIF 📱</button>
+                    <button class="btn-sec" onclick="shareToTelegram()">Share Game App 📱</button>
                 </div>
             </div>
 
@@ -410,7 +416,7 @@
                 <p style="font-size: 13px; color: #ccc; margin-top: 5px;">ጨዋታውን ለጓደኞችዎ በቴሌግራም በማጋራት ነፃ የቢንጎ መጫወቻ ቲኬቶችን በነፃ ይውሰዱ!</p>
                 
                 <div style="margin-top: 15px; font-weight: bold; font-size: 14px;">
-                    စုቅል የተደረገ የሼር ብዛት: <span id="totalSharesCount" style="color:var(--gold);">0</span> / 100
+                    የተጋበዙ ሰዎች ብዛት: <span id="totalSharesCount" style="color:var(--gold);">0</span> / 100
                 </div>
 
                 <div class="progress-container">
@@ -423,7 +429,7 @@
                     <span>100 (5 tkts)</span>
                 </div>
 
-                <button class="btn-prime" style="margin-top: 20px;" onclick="triggerReferralShare()">Invite/Share Now 📱</button>
+                <button class="btn-prime" style="margin-top: 20px;" onclick="triggerReferralShare()">Invite Now 📱</button>
             </div>
         </div>
 
@@ -432,7 +438,7 @@
                 <h3>💡 የ AI ትምህርት መመሪያ (How to Buy Stars)</h3>
                 <div class="ai-guide-box" style="margin-top: 10px;">
                     <strong>1. Stars እንዴት ይገዛል?</strong><br>
-                    በቴሌግራም ውስጥ በቀጥታ በቪዛ (Visa) ወይም በ ፍራንክ የባንክ አካውንት በመጠቀም የቴሌግራም Stars መግዛት ይችላሉ።<br><br>
+                    በቴሌግራም ውስጥ በቀጥታ በቪዛ (Visa) ወይም በባንክ አካውንት በመጠቀም የቴሌግራም Stars መግዛት ይችላሉ።<br><br>
                     <strong>2. የክፍያ ሂደት፦</strong><br>
                     "Pay 10 Stars" የሚለውን ሲጫኑ የቴሌግራም ኦፊሴላዊ የክፍያ ቦክስ ይመጣል። ክፍያውን ሲያጠናቅቁ ቦርዱ ይከፈታል።<br><br>
                     <strong>3. ማውጣት (Withdrawal)፦</strong><br>
@@ -448,7 +454,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -604,7 +609,6 @@
             }
         }
 
-        // Win Sensation
         function executeWinSensation() {
             tg.HapticFeedback.notificationOccurred('success');
             starBalance += 30;
@@ -653,8 +657,9 @@
         }
 
         function shareToTelegram() {
-            const gifUrl = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY2Z3I4Z3I5bXo1M3VxdHptbWN3ZzRkbW5pYnZ4ZTh6NTV6eThmZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/80ndgXvUe2vM4/giphy.gif";
-            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(gifUrl)}&text=I%20am%20playing%20Bingo!%20🎯`);
+            const botLink = "https://t.me/Bingo_lehulum_bot/app";
+            const shareText = "🎯 ድንቅ የቢንጎ ጨዋታ በቴሌግራም Stars ሽልማት ጋር! ተጫውተህ አሸንፍ!";
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(botLink)}&text=${encodeURIComponent(shareText)}`);
         }
     </script>
 </body>
