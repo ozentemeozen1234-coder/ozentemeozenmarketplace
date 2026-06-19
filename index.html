@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Bingo Lehulum - Perfectly Centered</title>
+    <title>Bingo Lehulum - Fixed Center Layout</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -20,29 +20,31 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        /* ሙሉ ስክሪኑን መሃል ላይ ለማምጣት (Perfect Center Alignment) */
-        body {
-            background-color: var(--dark-bg);
-            color: white;
+        /* ቴሌግራም ላይ ጥግ እንዳይይዝ ሙሉ ስክሪኑን መሃል የሚያደርግ CSS */
+        html, body {
+            width: 100%;
             min-height: 100vh;
+            background-color: var(--dark-bg);
             display: flex;
             justify-content: center;
-            align-items: center; /* ልክ መሃል ላይ ያደርገዋል */
+            align-items: center;
             overflow-x: hidden;
             user-select: none;
             -webkit-user-select: none;
-            padding: 10px;
         }
 
-        /* በቴሌግራም ስልክ ላይ ወደ ላይና ወደ ታች ሳይለጠጥ መሃል ላይ የሚቀመጥ ዋና ኮንቴነር */
+        /* ዋናው የጌም ኮንቴነር በጥግ ከመሆን ወጥቶ ሙሉ በሙሉ መሃል ላይ እንዲሰፋ የተደረገ */
         .app-wrapper {
-            width: 100%;
-            max-width: 390px; /* ለሁሉም ስልኮች ተስማሚ ስፋት */
+            width: 100vw;
+            max-width: 440px; /* በስልኮች ላይ ሙሉ ስክሪን እንዲሆን ያደርገዋል */
+            min-height: 100vh;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
             justify-content: center;
-            margin: auto 0; /* መሃል ላይ መሆኑን ያረጋግጣል */
+            align-items: stretch;
+            margin: 0 auto; /* ፍፁም ማዕከላዊ አሰላለፍ */
         }
 
         /* ገጽታ 1፦ ፕሪሚየም የፊት ገጽ */
@@ -63,6 +65,7 @@
             border-radius: 12px;
             padding: 4px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
         }
 
         .game-active-theme .nav-header-tabs {
@@ -72,7 +75,7 @@
 
         .tab-item {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             background: none;
             border: none;
             color: #aaa;
@@ -92,17 +95,18 @@
         }
 
         .app-page { display: none; width: 100%; }
-        .app-page.active { display: flex; flex-direction: column; gap: 12px; }
+        .app-page.active { display: flex; flex-direction: column; gap: 14px; }
 
         /* የተጫዋች መረጃ ማሳያ */
         .player-status-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 14px;
+            padding: 12px 14px;
             background: var(--card-dark);
             border-radius: 14px;
             border: 1px solid rgba(255, 215, 0, 0.2);
+            width: 100%;
         }
 
         .game-active-theme .player-status-bar {
@@ -112,32 +116,33 @@
         }
 
         .profile-holder { display: flex; align-items: center; gap: 10px; }
-        .avatar-circle { width: 34px; height: 34px; border-radius: 50%; background: var(--gold); border: 2px solid white; display: flex; align-items: center; justify-content: center; font-weight: bold; color: black; font-size: 14px; }
-        .stars-badge { background: linear-gradient(135deg, #ffd700, #ffa500); color: black; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; }
+        .avatar-circle { width: 36px; height: 36px; border-radius: 50%; background: var(--gold); border: 2px solid white; display: flex; align-items: center; justify-content: center; font-weight: bold; color: black; font-size: 14px; }
+        .stars-badge { background: linear-gradient(135deg, #ffd700, #ffa500); color: black; padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 12px; }
 
         /* የመሃል ክብ ቢንጎ ማሽከርከሪያ (Tombola) አኒሜሽን */
         .center-spin-card {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 18px;
-            padding: 15px;
+            padding: 20px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            width: 100%;
         }
 
         .tombola-wheel {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
-            border: 5px dashed var(--gold);
-            margin: 12px 0;
+            border: 6px dashed var(--gold);
+            margin: 15px 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 38px;
+            font-size: 42px;
             background: radial-gradient(circle, #251c05 0%, #000 100%);
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.35);
             animation: rotateWheel 6s linear infinite;
@@ -152,10 +157,11 @@
         .habesha-paywall {
             background: linear-gradient(135deg, #151522 0%, #07070d 100%);
             border-radius: 18px;
-            padding: 20px;
+            padding: 24px 20px;
             text-align: center;
             border: 2px solid var(--gold);
             box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+            width: 100%;
         }
 
         .engine-toggle-row {
@@ -163,12 +169,13 @@
             background: rgba(0, 0, 0, 0.4);
             padding: 4px;
             border-radius: 10px;
-            margin: 12px 0;
+            margin: 15px 0;
+            width: 100%;
         }
 
         .engine-btn {
             flex: 1;
-            padding: 9px;
+            padding: 10px;
             background: none;
             border: none;
             color: #666;
@@ -187,7 +194,7 @@
         .habesha-board-box {
             background: white;
             border-radius: 16px;
-            padding: 12px;
+            padding: 16px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.12);
             display: none;
             width: 100%;
@@ -196,20 +203,20 @@
         .grid-90-layout {
             display: grid;
             grid-template-columns: repeat(10, 1fr); /* 10 ቁጥሮች በአግድም በአንድ መስመር */
-            gap: 4px;
+            gap: 5px;
             width: 100%;
         }
 
         .grid-90-layout div {
             background: #f1f3f5;
             color: #222;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 800;
-            height: 32px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 5px;
+            border-radius: 6px;
             border: 1px solid #cbd5e1;
             cursor: pointer;
         }
@@ -229,9 +236,9 @@
             background: linear-gradient(135deg, #ffd700, #ffa500);
             color: black;
             border: none;
-            padding: 14px 20px;
+            padding: 15px 20px;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 16px;
             border-radius: 12px;
             cursor: pointer;
             width: 100%;
@@ -261,6 +268,7 @@
             border-radius: 15px;
             padding: 15px;
             border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 100%;
         }
 
         .bar-container {
@@ -394,7 +402,7 @@
             <div class="reward-card-box">
                 <h3>💡 የ Stars አጠቃቀም የ AI መመሪያ</h3>
                 <div style="font-size:13px; line-height:1.6; color:#ddd; margin-top:8px; display:flex; flex-direction:column; gap:6px;">
-                    <p><strong>1. ስታርስ እንዴት ይገዛል?</strong><br>በቴሌግራም ውስጥ የባንክ ካርድ በመጠቀም Stars በቀላሉ መግዛት ይቻላል።</p>
+                    <p><strong>1. ስታርስ እንዴት ይገዛል?</strong><br>በቴሌግราม ውስጥ የባንክ ካርድ በመጠቀም Stars በቀላሉ መግዛት ይቻላል slums።</p>
                     <p><strong>2. የክፍያ አፈፃፀም፦</strong><br>"Play 10 Stars" ሲጫኑ የቴሌግራም ሲስተም ክፍያውን ያረጋግጣል።</p>
                 </div>
             </div>
@@ -420,7 +428,6 @@
         let autoIntervalEngine = null;
         let currentTgUser = "የቢንጎ ተጫዋች";
 
-        // የቴሌግራም ላይቭ ስም ማንበቢያ
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             const u = tg.initDataUnsafe.user;
             currentTgUser = (u.first_name + ' ' + (u.last_name || '')).trim();
